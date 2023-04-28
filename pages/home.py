@@ -1,0 +1,124 @@
+import dash
+import dash_bootstrap_components as dbc
+from dash import Dash, html, dcc
+import pandas as pd
+import chardet
+
+dash.register_page(__name__, path="/")
+
+
+# Footer
+correo = html.Div(
+    "📩 contacto@observatoriodelaire.com",
+    style={"font-size": "16px"}
+)
+telefono = html.Div(
+    "📞 81 2314 3857",
+    style={"font-size": "16px", "margin-left": "30px"}
+)
+
+
+# Page layout
+layout = dbc.Container([
+
+    # Navbar - Mobile and Desktop
+    dbc.Navbar(
+        dbc.Container([
+
+            html.A(
+                dbc.Row(
+                    dbc.Col(
+                        html.Img(src="../assets/logo_occamm.png", height="34px"),
+                        style={"color": "black"}
+                    ),
+                    align="center", className="g-0"
+                ),
+                href="/", style={"text-decoration": "none"}
+            ),
+
+            dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
+
+            dbc.Collapse(
+                dbc.Nav([
+                    dbc.NavItem(dbc.NavLink("Mapa", href="/mapa")),
+                    dbc.NavItem(dbc.NavLink("Datos", href="/datos")),
+                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas"))
+                ], className="ms-auto", navbar=True),
+                id="navbar-collapse", navbar=True,
+            ),
+
+        ]),
+        color="light", dark=False
+    ),
+
+    # Footer - Mobile
+    dbc.Row(
+        dbc.Col([
+            html.B(
+                "Comunícate con nosotros",
+                style = {"font-size": "22px"}
+            ),
+            html.P(
+                "📩 contacto@observatoriodelaire.com",
+                className = "pt-3",
+                style = {"font-size": "16px"}
+            ),
+            html.P(
+                "📞 81 2314 3857",
+                className="pt-1",
+                style = {"font-size": "16px"}
+            ),
+            html.P(
+                "📍 Blvd. Antonio L. Rodriguez #2100, Colonia Santa María, Monterrey, Nuevo León.",
+                className="pt-1",
+                style = {"font-size": "16px"}
+            ),
+            html.P(
+                "© Observatorio Ciudadano de la Calidad del Aire del Área Metropolitana de Monterrey (2023)",
+                className = "pt-4",
+                style = {"font-size": "12px"}
+            )
+        ],
+            style={
+                "background-color": "#F7F7F7",
+            },
+            className = "pt-3 pb-1"
+        ),
+        className="pt-4 d-lg-none"
+    ),
+
+    # Footer - Desktop
+    dbc.Row(
+        dbc.Col([
+            html.B(
+                "Comunícate con nosotros",
+                style={"font-size": "22px"}
+            ),
+            html.P([
+                correo,
+                telefono
+            ],  style={'display': 'flex', 'justify-content': 'center'}, className = "pt-3"
+            ),
+            html.P(
+                "📍 Blvd. Antonio L. Rodriguez #2100, Colonia Santa María, Monterrey, Nuevo León.",
+                className="pt-1",
+                style={"font-size": "16px"}
+            ),
+            html.P(
+                "© Observatorio Ciudadano de la Calidad del Aire del Área Metropolitana de Monterrey (2023)",
+                className="pt-4",
+                style={"font-size": "12px"}
+            )
+        ],
+            style={
+                "background-color": "#F7F7F7",
+                "text-align": "center"
+            },
+            className="pt-3 pb-1"
+        ),
+        className="pt-4 d-none d-lg-block", style = {"text-align": "center"}
+    )
+
+
+])
+
