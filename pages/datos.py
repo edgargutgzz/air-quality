@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc
 
-dash.register_page(__name__, path="/conocemas")
+dash.register_page(__name__, path="/datos")
 
 # Footer
 correo = html.Div(
@@ -48,16 +48,19 @@ layout = dbc.Container([
         color="light", dark=False
     ),
 
-    # Conoce más
+    # Datos
     dbc.Row([
         dbc.Col([
             html.P([
-                "Organización de la sociedad civil dedicada a acelerar los procesos legales, económicos, sociales "
-                "y culturales que nos permitan contar con una mejor calidad del aire."
+                "Los datos de calidad del aire son proporcionados por los sensores de  ",
+                html.A("Purple Air", href="https://www2.purpleair.com/", target = "_blank"),
+                " situados en distintos "
+                "puntos del área metropolitana de Monterrey y analizados por el Observatorio Ciudadano de la Calidad "
+                "del Aire; la información se actualiza diariamente.",
             ]),
             html.P([
-                "Conoce más sobre la iniciativa ingresando al sitio oficial del ",
-                html.A("OCCAMM", href="https://observatoriodelaire.com/", target="_blank"),
+                "Descarga los datos dando click ",
+                html.A("aquí", href="https://observatoriodelaire.com/", target="_blank"),
                 "."
             ])
         ], style={"font-size": "20px", "height": "100vh"}, lg=11
