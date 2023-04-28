@@ -1,8 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc
-import pandas as pd
-import chardet
 
 dash.register_page(__name__, path="/")
 
@@ -73,6 +71,21 @@ layout = dbc.Container([
                 className="pt-1",
                 style = {"font-size": "16px"}
             ),
+            html.Br(),
+            html.Div(
+                [
+                    html.Img(
+                        src="assets/twitter.png", alt="Twitter", height="34", style={"margin-right": "25px"}
+                    ),
+                    html.Img(
+                        src="assets/instagram.png", alt="Instagram", height="32", style = {"margin-right": "25px "}
+                    ),
+                    html.Img(
+                        src="assets/facebook.png", alt="Facebook", height="30"
+                    )
+                ],
+                style={"display": "flex"},
+            ),
             html.P(
                 "© Observatorio Ciudadano de la Calidad del Aire del Área Metropolitana de Monterrey (2023)",
                 className = "pt-4",
@@ -103,6 +116,21 @@ layout = dbc.Container([
                 "📍 Blvd. Antonio L. Rodriguez #2100, Colonia Santa María, Monterrey, Nuevo León.",
                 className="pt-1",
                 style={"font-size": "16px"}
+            ),
+            html.Br(),
+            html.Div(
+                [
+                    html.Img(
+                        src="assets/twitter.png", alt="Twitter", height="34", style={"margin-right": "25px"}
+                    ),
+                    html.Img(
+                        src="assets/instagram.png", alt="Instagram", height="32", style={"margin-right": "25px "}
+                    ),
+                    html.Img(
+                        src="assets/facebook.png", alt="Facebook", height="30"
+                    )
+                ],
+                style={"display": "flex", "align-items": "center", "justify-content": "center"},
             ),
             html.P(
                 "© Observatorio Ciudadano de la Calidad del Aire del Área Metropolitana de Monterrey (2023)",
