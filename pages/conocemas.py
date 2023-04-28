@@ -2,8 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc
 
-dash.register_page(__name__, path="/")
-
+dash.register_page(__name__, path="/conocemas")
 
 # Footer
 correo = html.Div(
@@ -49,6 +48,25 @@ layout = dbc.Container([
         color="light", dark=False
     ),
 
+    # Conoce más
+    dbc.Row([
+        dbc.Col([
+            html.P([
+                "Organización de la sociedad civil dedicada a acelerar los procesos legales, económicos, sociales "
+                "y culturales que nos permitan contar con una mejor calidad del aire."
+            ]),
+            html.P([
+                "Conoce más sobre la iniciativa ingresando al sitio oficial del ",
+                html.A("OCCAMM", href="https://observatoriodelaire.com/", target="_blank"),
+                "."
+            ])
+        ], style={"font-size": "20px"}, lg=11
+        )
+    ],
+        class_name="pt-4 pb-5",
+        justify="center"
+    ),
+
     # Footer - Mobile
     dbc.Row(
         dbc.Col([
@@ -74,34 +92,14 @@ layout = dbc.Container([
             html.Br(),
             html.Div(
                 [
-                    html.A(
-                        href="https://twitter.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/twitter.png",
-                            alt="Twitter",
-                            height="34",
-                            style={"margin-right": "25px"}
-                        ),
+                    html.Img(
+                        src="assets/twitter.png", alt="Twitter", height="34", style={"margin-right": "25px"}
                     ),
-                    html.A(
-                        href="https://www.instagram.com/observatoriomty/",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/instagram.png",
-                            alt="Instagram",
-                            height="32",
-                            style={"margin-right": "25px"}
-                        ),
+                    html.Img(
+                        src="assets/instagram.png", alt="Instagram", height="32", style = {"margin-right": "25px "}
                     ),
-                    html.A(
-                        href="https://www.facebook.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/facebook.png",
-                            alt="Facebook",
-                            height="30"
-                        ),
+                    html.Img(
+                        src="assets/facebook.png", alt="Facebook", height="30"
                     )
                 ],
                 style={"display": "flex"},
@@ -140,34 +138,14 @@ layout = dbc.Container([
             html.Br(),
             html.Div(
                 [
-                    html.A(
-                        href="https://twitter.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/twitter.png",
-                            alt="Twitter",
-                            height="34",
-                            style={"margin-right": "25px"}
-                        ),
+                    html.Img(
+                        src="assets/twitter.png", alt="Twitter", height="34", style={"margin-right": "25px"}
                     ),
-                    html.A(
-                        href="https://www.instagram.com/observatoriomty/",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/instagram.png",
-                            alt="Instagram",
-                            height="32",
-                            style={"margin-right": "25px"}
-                        ),
+                    html.Img(
+                        src="assets/instagram.png", alt="Instagram", height="32", style={"margin-right": "25px "}
                     ),
-                    html.A(
-                        href="https://www.facebook.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/facebook.png",
-                            alt="Facebook",
-                            height="30"
-                        ),
+                    html.Img(
+                        src="assets/facebook.png", alt="Facebook", height="30"
                     )
                 ],
                 style={"display": "flex", "align-items": "center", "justify-content": "center"},
