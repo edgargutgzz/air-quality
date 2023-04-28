@@ -57,7 +57,8 @@ layout = dbc.Container([
             ]),
             html.P([
                 "Conoce más sobre la iniciativa ingresando al sitio oficial del ",
-                html.A("OCCAMM", href="https://observatoriodelaire.com/", target="_blank"),
+                html.A("OCCAMM", href="https://observatoriodelaire.com/", target="_blank",
+                       style={"text-decoration": "none"}),
                 "."
             ])
         ], style={"font-size": "20px", "height": "100vh"}, lg=11

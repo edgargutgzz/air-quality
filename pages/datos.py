@@ -53,14 +53,16 @@ layout = dbc.Container([
         dbc.Col([
             html.P([
                 "Los datos de calidad del aire son proporcionados por los sensores de  ",
-                html.A("Purple Air", href="https://www2.purpleair.com/", target = "_blank"),
+                html.A("Purple Air", href="https://www2.purpleair.com/", target = "_blank",
+                       style={"text-decoration": "none"}),
                 " situados en distintos "
                 "puntos del área metropolitana de Monterrey y analizados por el Observatorio Ciudadano de la Calidad "
                 "del Aire; la información se actualiza diariamente.",
             ]),
             html.P([
                 "Descarga los datos dando click ",
-                html.A("aquí", href="https://observatoriodelaire.com/", target="_blank"),
+                html.A("aquí", href="https://observatoriodelaire.com/", target="_blank",
+                       style={"text-decoration": "none"}),
                 "."
             ])
         ], style={"font-size": "20px", "height": "100vh"}, lg=11
