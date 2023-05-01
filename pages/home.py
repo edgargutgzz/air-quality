@@ -58,7 +58,7 @@ layout = dbc.Container([
                     dbc.NavItem(
                         dbc.DropdownMenu([
                             dbc.DropdownMenuItem("OCCAMM", href="/occamm"),
-                            dbc.DropdownMenuItem("Purple Air", href="/purple_air")
+                            dbc.DropdownMenuItem("Purple Air", href="/purpleair")
                         ],
                             label="Mapa",
                             toggle_style={
