@@ -1,6 +1,9 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc
+import dash_ag_grid as dag
+import pandas as pd
+
 
 dash.register_page(__name__, path="/")
 
@@ -14,6 +17,18 @@ telefono = html.Div(
     "📞 81 2314 3857",
     style={"font-size": "16px", "margin-left": "30px"}
 )
+
+# Sample data
+data = {
+    'name': ['Estación de Monitoreo de Calidad del Aire Comité Municipal PAN Abasolo', 'Estación de Monitoreo de Calidad del Aire Comité Municipal PAN Allende', 'La Gozacion', 'Estación de Monitoreo de Calidad del Aire Comité Municipal PAN Allende'],
+    'sensor_index': [143390, 50571, 132661, 143346],
+    'municipio': ['Abasolo', 'Allende', 'Allende', 'Allende'],
+    'estado': ['Nuevo Leon'] * 4,
+    'lat': [25.947264, 25.215078, 25.317438, 25.282354],
+    'lon': [-100.399025, -99.9597, -100.04217, -100.0235]
+}
+
+df = pd.DataFrame(data)
 
 
 # Page layout
@@ -38,9 +53,22 @@ layout = dbc.Container([
 
             dbc.Collapse(
                 dbc.Nav([
-                    dbc.NavItem(dbc.NavLink("Mapa", href="/mapa")),
+                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas")),
                     dbc.NavItem(dbc.NavLink("Datos", href="/datos")),
-                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas"))
+                    dbc.NavItem(
+                        dbc.DropdownMenu([
+                            dbc.DropdownMenuItem("OCCAMM", href="/occamm"),
+                            dbc.DropdownMenuItem("Purple Air", href="/purple_air")
+                        ],
+                            label="Mapa",
+                            toggle_style={
+                                "background": "#F8F9FA",
+                                "color": "#7A7B7B",
+                                "border": "none"
+                            },
+                            nav=True
+                        )
+                    )
                 ], className="ms-auto", navbar=True),
                 id="navbar-collapse", navbar=True,
             ),
@@ -48,6 +76,25 @@ layout = dbc.Container([
         ]),
         color="light", dark=False
     ),
+
+    dbc.Row(
+        dbc.Col(
+            html.Div(
+                dag.AgGrid(
+                    id='my_ag_grid',
+                    rowData=df.to_dict('records'),
+                    columnDefs=[{"headerName": col, "field": col} for col in df.columns],
+                    defaultColDef={
+                        'editable': False,
+                        'sortable': True,
+                        'filter': 'agTextColumnFilter',
+                        'resizable': True
+                    }
+                )
+            )
+        )
+    ),
+
 
     # Footer - Mobile
     dbc.Row(
