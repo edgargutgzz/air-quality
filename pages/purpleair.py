@@ -58,7 +58,7 @@ layout = html.Div([
         dbc.Col(
             html.Iframe(
                 src="https://map.purpleair.com/1/mAQI/a10/p604800/cC0#8.5/25.5545/-100.2867",
-                style={"width": "100%", "height": "600px", "border": "0"}
+                style={"width": "100%", "height": "100vh", "border": "0"}
             )
         )
     )
