@@ -4,4 +4,4 @@ pandas==1.3.5
 dash-bootstrap-components==1.3.1
 plotly_express==0.4.1
 chardet==4.0.0
-dash_ag-grid==2.0.0a4
+dash_ag-grid==2.0.0
