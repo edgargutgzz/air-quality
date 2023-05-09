@@ -3,6 +3,8 @@ import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc
 import dash_ag_grid as dag
 import pandas as pd
+import os
+import psycopg2
 
 
 dash.register_page(__name__, path="/")
@@ -17,6 +19,19 @@ telefono = html.Div(
     "📞 81 2314 3857",
     style={"font-size": "16px", "margin-left": "30px"}
 )
+
+# Air Quality data
+# Connect to database.
+DATABASE_URL = os.environ.get('DATABASE_URL')
+conn = psycopg2.connect(DATABASE_URL)
+
+# Execute the query and fetch data
+query = "SELECT sensor_id, AVG(pm25) as avg_pm25 FROM air_quality GROUP BY sensor_id;"
+dataframe = pd.read_sql(query, conn)
+
+# Close the connection
+conn.close()
+
 
 # Sample data
 data = {
@@ -82,7 +97,7 @@ layout = dbc.Container([
             html.Div(
                 dag.AgGrid(
                     id='my_ag_grid',
-                    rowData=df.to_dict('records'),
+                    rowData=dataframe.to_dict('records'),
                     columnDefs=[{"headerName": col, "field": col} for col in df.columns],
                     defaultColDef={
                         'editable': False,

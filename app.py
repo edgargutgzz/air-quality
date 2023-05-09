@@ -112,9 +112,6 @@ app.callback(
     [State("offcanvas", "is_open")],
 )(toggle_offcanvas)
 
-
-
-
 # Callback - Desktop
 def map_desktop(switches_value):
 
