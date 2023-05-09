@@ -3,6 +3,7 @@ from dash import Dash, html, dcc, Input, Output, State
 import plotly_express as px
 import os
 import pandas as pd
+import psycopg2
 
 # Bootstrap
 external_stylesheets = [{'href': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css',

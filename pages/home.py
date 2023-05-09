@@ -5,6 +5,8 @@ import dash_ag_grid as dag
 import pandas as pd
 import os
 import psycopg2
+from dash.dependencies import Input, Output, State
+import plotly.express as px
 
 
 dash.register_page(__name__, path="/")
@@ -20,6 +22,8 @@ telefono = html.Div(
     style={"font-size": "16px", "margin-left": "30px"}
 )
 
+#----------
+
 # Air Quality data
 # Connect to database.
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -28,31 +32,49 @@ conn = psycopg2.connect(DATABASE_URL)
 # Execute the query and fetch data
 query = """
 WITH numbered_rows AS (
-    SELECT sensor_id, pm25, TO_TIMESTAMP(date, 'YYYY/MM/DD HH24:MI') as date, ROW_NUMBER() OVER (ORDER BY TO_TIMESTAMP(date, 'YYYY/MM/DD HH24:MI')) as row_num
-    FROM air_quality
-    WHERE pm25 > 0
+    SELECT a.sensor_id, a.pm25, s.nombre, s.municipio, TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI') as date, ROW_NUMBER() OVER (ORDER BY TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI')) as row_num
+    FROM air_quality a
+    JOIN sensors s ON a.sensor_id = s.sensor_id
+    WHERE a.pm25 > 0
 )
-SELECT sensor_id, ROUND(AVG(pm25)) as avg_pm25
+SELECT sensor_id, nombre, municipio, ROUND(AVG(pm25)) as avg_pm25
 FROM numbered_rows
 WHERE row_num > 714
-GROUP BY sensor_id
+GROUP BY sensor_id, nombre, municipio
+HAVING ROUND(AVG(pm25)) > 0
 ORDER BY MIN(date);
 """
-
-
-
-
-
-
-
-
-
 
 dataframe = pd.read_sql(query, conn)
 
 # Close the connection
 conn.close()
 
+#----------
+
+# Air Quality Spark Line
+
+max_value = dataframe['avg_pm25'].max()
+dataframe['sparkline'] = (dataframe['avg_pm25'] / max_value) * 100
+
+columnDefs = [
+    {"headerName": col, "field": col} if col != "sparkline" else {
+        "headerName": "Sparkline",
+        "field": "sparkline",
+        "cellRenderer": (
+            'function(params) {'
+                'var eDiv = document.createElement("div");'
+                'eDiv.style.width = params.value + "%";'
+                'eDiv.style.height = "100%";'
+                'eDiv.style.backgroundColor = "rgba(58, 71, 80, 0.6)";'
+                'return eDiv;'
+            '}'
+        )
+    } for col in dataframe.columns
+]
+
+
+#----------
 
 # Page layout
 layout = dbc.Container([
@@ -100,13 +122,14 @@ layout = dbc.Container([
         color="light", dark=False
     ),
 
+    # Air Quality - Table
     dbc.Row(
         dbc.Col(
             html.Div(
                 dag.AgGrid(
                     id='my_ag_grid',
                     rowData=dataframe.to_dict('records'),
-                    columnDefs=[{"headerName": col, "field": col} for col in dataframe.columns],
+                    columnDefs=columnDefs,
                     defaultColDef={
                         'editable': False,
                         'sortable': True,
@@ -115,9 +138,9 @@ layout = dbc.Container([
                     }
                 )
             )
-        )
+        ),
+        className="pt-4"
     ),
-
 
     # Footer - Mobile
     dbc.Row(
