@@ -26,24 +26,32 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
 # Execute the query and fetch data
-query = "SELECT sensor_id, AVG(pm25) as avg_pm25 FROM air_quality GROUP BY sensor_id;"
+query = """
+WITH numbered_rows AS (
+    SELECT sensor_id, pm25, TO_TIMESTAMP(date, 'YYYY/MM/DD HH24:MI') as date, ROW_NUMBER() OVER (ORDER BY TO_TIMESTAMP(date, 'YYYY/MM/DD HH24:MI')) as row_num
+    FROM air_quality
+    WHERE pm25 > 0
+)
+SELECT sensor_id, ROUND(AVG(pm25)) as avg_pm25
+FROM numbered_rows
+WHERE row_num > 714
+GROUP BY sensor_id
+ORDER BY MIN(date);
+"""
+
+
+
+
+
+
+
+
+
+
 dataframe = pd.read_sql(query, conn)
 
 # Close the connection
 conn.close()
-
-
-# Sample data
-data = {
-    'name': ['Estación de Monitoreo de Calidad del Aire Comité Municipal PAN Abasolo', 'Estación de Monitoreo de Calidad del Aire Comité Municipal PAN Allende', 'La Gozacion', 'Estación de Monitoreo de Calidad del Aire Comité Municipal PAN Allende'],
-    'sensor_index': [143390, 50571, 132661, 143346],
-    'municipio': ['Abasolo', 'Allende', 'Allende', 'Allende'],
-    'estado': ['Nuevo Leon'] * 4,
-    'lat': [25.947264, 25.215078, 25.317438, 25.282354],
-    'lon': [-100.399025, -99.9597, -100.04217, -100.0235]
-}
-
-df = pd.DataFrame(data)
 
 
 # Page layout
@@ -98,7 +106,7 @@ layout = dbc.Container([
                 dag.AgGrid(
                     id='my_ag_grid',
                     rowData=dataframe.to_dict('records'),
-                    columnDefs=[{"headerName": col, "field": col} for col in df.columns],
+                    columnDefs=[{"headerName": col, "field": col} for col in dataframe.columns],
                     defaultColDef={
                         'editable': False,
                         'sortable': True,
