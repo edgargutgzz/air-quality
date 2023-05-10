@@ -7,7 +7,7 @@ import os
 import psycopg2
 from dash.dependencies import Input, Output, State
 import plotly.express as px
-
+import dash_table
 
 dash.register_page(__name__, path="/")
 
@@ -35,13 +35,11 @@ WITH numbered_rows AS (
     SELECT a.sensor_id, a.pm25, s.nombre, s.municipio, TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI') as date, ROW_NUMBER() OVER (ORDER BY TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI')) as row_num
     FROM air_quality a
     JOIN sensors s ON a.sensor_id = s.sensor_id
-    WHERE a.pm25 > 0
 )
 SELECT sensor_id, nombre, municipio, ROUND(AVG(pm25)) as avg_pm25
 FROM numbered_rows
 WHERE row_num > 714
 GROUP BY sensor_id, nombre, municipio
-HAVING ROUND(AVG(pm25)) > 0
 ORDER BY MIN(date);
 """
 
@@ -52,27 +50,66 @@ conn.close()
 
 #----------
 
-# Air Quality Spark Line
+# Air Quality - Scatter Plot
+def assign_color_label(value):
+    if value <= 25:
+        return "Buena"
+    elif 26 <= value <= 45:
+        return "Aceptable"
+    elif 46 <= value <= 79:
+        return "Mala"
+    elif 80 <= value <= 147:
+        return "Muy Mala"
+    else:
+        return "Extremadamente Mala"
 
+dataframe = dataframe.sort_values(by='municipio', ascending=False)
+dataframe['color_label'] = dataframe['avg_pm25'].apply(assign_color_label)
+dataframe['sensor_count'] = range(1, len(dataframe) + 1)
+dataframe['municipio_order'] = dataframe.groupby('municipio').ngroup()
+
+
+scatter_fig = px.scatter(
+    dataframe,
+    x="avg_pm25",
+    y='municipio',
+    color="color_label",
+    color_discrete_sequence=["#00FF00", "#0000FF", "#FFFF00", "#FFA500", "#FF0000"],
+    title=None,
+    hover_name='municipio'
+)
+
+scatter_fig.update_layout(
+    xaxis_title=None,
+    yaxis_title=None,
+    showlegend=False
+)
+
+scatter_fig.update_layout(
+    height=600,  # Increase the height of the plot
+    margin=dict(l=20, r=20, t=20, b=20),
+    yaxis=dict(  # Increase the distance between tick labels
+        tickmode="array",
+        tickvals=dataframe["municipio"],
+        ticktext=dataframe["municipio"],
+        tickfont=dict(size=10),
+        tickangle=0,
+        ticklen=10
+    ),
+)
+
+
+# Air Quality - Table
 max_value = dataframe['avg_pm25'].max()
-dataframe['sparkline'] = (dataframe['avg_pm25'] / max_value) * 100
 
 columnDefs = [
-    {"headerName": col, "field": col} if col != "sparkline" else {
-        "headerName": "Sparkline",
-        "field": "sparkline",
-        "cellRenderer": (
-            'function(params) {'
-                'var eDiv = document.createElement("div");'
-                'eDiv.style.width = params.value + "%";'
-                'eDiv.style.height = "100%";'
-                'eDiv.style.backgroundColor = "rgba(58, 71, 80, 0.6)";'
-                'return eDiv;'
-            '}'
-        )
-    } for col in dataframe.columns
+    {"headerName": "Sensor ID", "field": "sensor_id"} if col == "sensor_id" else
+    {"headerName": "Nombre", "field": "nombre"} if col == "nombre" else
+    {"headerName": "Municipio", "field": "municipio"} if col == "municipio" else
+    {"headerName": "PM2.5", "field": "avg_pm25"} if col == "avg_pm25" else
+    {"headerName": "Calidad del Aire", "field": "color_label"} if col == "color_label" else
+    {"headerName": col, "field": col} for col in dataframe.columns if col != "sparkline" and col not in ["sensor_count", "municipio_order"]
 ]
-
 
 #----------
 
@@ -98,14 +135,12 @@ layout = dbc.Container([
 
             dbc.Collapse(
                 dbc.Nav([
-                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas")),
-                    dbc.NavItem(dbc.NavLink("Datos", href="/datos")),
                     dbc.NavItem(
                         dbc.DropdownMenu([
                             dbc.DropdownMenuItem("OCCAMM", href="/occamm"),
                             dbc.DropdownMenuItem("Purple Air", href="/purpleair")
                         ],
-                            label="Mapa",
+                            label="Mapas",
                             toggle_style={
                                 "background": "#F8F9FA",
                                 "color": "#7A7B7B",
@@ -113,7 +148,9 @@ layout = dbc.Container([
                             },
                             nav=True
                         )
-                    )
+                    ),
+                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas")),
+                    dbc.NavItem(dbc.NavLink("Datos", href="/datos"))
                 ], className="ms-auto", navbar=True),
                 id="navbar-collapse", navbar=True,
             ),
@@ -125,19 +162,42 @@ layout = dbc.Container([
     # Air Quality - Table
     dbc.Row(
         dbc.Col(
-            html.Div(
-                dag.AgGrid(
-                    id='my_ag_grid',
-                    rowData=dataframe.to_dict('records'),
-                    columnDefs=columnDefs,
-                    defaultColDef={
-                        'editable': False,
-                        'sortable': True,
-                        'filter': 'agTextColumnFilter',
-                        'resizable': True
-                    }
+            dbc.Card([
+                dbc.CardHeader("Sensores de Purple Air del Área Metropolitana de Monterrey", style={"font-weight": "bold"}),
+                dbc.CardBody(
+                    html.Div(
+                        html.Div(
+                            dag.AgGrid(
+                                id='my_ag_grid',
+                                rowData=dataframe.to_dict('records'),
+                                columnDefs=columnDefs,
+                                defaultColDef={
+                                    'editable': False,
+                                    'sortable': True,
+                                    'filter': 'agTextColumnFilter',
+                                    'resizable': True
+                                },
+                            )                        )
+                    )
                 )
-            )
+            ])
+        ),
+        className="pt-4"
+    ),
+
+    # Air Quality - Scatter Plot
+    dbc.Row(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardHeader("Sensores de Purple Air por Volumen de PM2.5", style={"font-weight": "bold"}),
+                dbc.CardBody(
+                    dcc.Graph(
+                        id='scatter_plot',
+                        figure=scatter_fig,
+                        config={'displayModeBar': False}
+                    )
+                )            
+            ])
         ),
         className="pt-4"
     ),

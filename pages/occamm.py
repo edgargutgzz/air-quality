@@ -104,14 +104,12 @@ layout = html.Div([
 
             dbc.Collapse(
                 dbc.Nav([
-                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas")),
-                    dbc.NavItem(dbc.NavLink("Datos", href="/datos")),
                     dbc.NavItem(
                         dbc.DropdownMenu([
                             dbc.DropdownMenuItem("OCCAMM", href="/occamm"),
                             dbc.DropdownMenuItem("Purple Air", href="/purpleair")
                         ],
-                            label="Mapa",
+                            label="Mapas",
                             toggle_style={
                                 "background": "#F8F9FA",
                                 "color": "#7A7B7B",
@@ -119,7 +117,9 @@ layout = html.Div([
                             },
                             nav=True
                         )
-                    )
+                    ),
+                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas")),
+                    dbc.NavItem(dbc.NavLink("Datos", href="/datos"))
                 ], className="ms-auto", navbar=True),
                 id="navbar-collapse", navbar=True,
             ),
