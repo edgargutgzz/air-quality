@@ -44,13 +44,24 @@ ORDER BY MIN(date);
 """
 
 dataframe = pd.read_sql(query, conn)
+dataframe.sort_values(by='avg_pm25', ascending=False, inplace=True) 
 
 # Close the connection
 conn.close()
 
 #----------
 
-# Air Quality - Scatter Plot
+# Air Quality - Table
+max_value = dataframe['avg_pm25'].max()
+
+columnDefs = [
+    {"headerName": "ID", "field": "sensor_id", "flex": 1},
+    {"headerName": "Sensor", "field": "nombre", "flex": 3},
+    {"headerName": "Municipio", "field": "municipio", "flex": 2},
+    {"headerName": "PM2.5", "field": "avg_pm25", "flex": 2},
+    {"headerName": "Calidad del Aire", "field": "color_label", "flex": 2}
+]
+
 def assign_color_label(value):
     if value <= 25:
         return "Buena"
@@ -63,14 +74,22 @@ def assign_color_label(value):
     else:
         return "Extremadamente Mala"
 
-dataframe = dataframe.sort_values(by='municipio', ascending=False)
+# Assign 'color_label' to the original dataframe
 dataframe['color_label'] = dataframe['avg_pm25'].apply(assign_color_label)
-dataframe['sensor_count'] = range(1, len(dataframe) + 1)
-dataframe['municipio_order'] = dataframe.groupby('municipio').ngroup()
 
+
+# Air Quality - Scatter Plot
+
+# Create a copy of the DataFrame for the scatter plot and sort it by 'municipio'
+scatter_dataframe = dataframe.copy()
+scatter_dataframe.sort_values(by='municipio', ascending=False, inplace=True)
+
+scatter_dataframe['color_label'] = scatter_dataframe['avg_pm25'].apply(assign_color_label)
+scatter_dataframe['sensor_count'] = range(1, len(scatter_dataframe) + 1)
+scatter_dataframe['municipio_order'] = scatter_dataframe.groupby('municipio').ngroup()
 
 scatter_fig = px.scatter(
-    dataframe,
+    scatter_dataframe,
     x="avg_pm25",
     y='municipio',
     color="color_label",
@@ -90,26 +109,13 @@ scatter_fig.update_layout(
     margin=dict(l=20, r=20, t=20, b=20),
     yaxis=dict(  # Increase the distance between tick labels
         tickmode="array",
-        tickvals=dataframe["municipio"],
-        ticktext=dataframe["municipio"],
+        tickvals=scatter_dataframe["municipio"],
+        ticktext=scatter_dataframe["municipio"],
         tickfont=dict(size=10),
         tickangle=0,
         ticklen=10
-    ),
+    )
 )
-
-
-# Air Quality - Table
-max_value = dataframe['avg_pm25'].max()
-
-columnDefs = [
-    {"headerName": "Sensor ID", "field": "sensor_id"} if col == "sensor_id" else
-    {"headerName": "Nombre", "field": "nombre"} if col == "nombre" else
-    {"headerName": "Municipio", "field": "municipio"} if col == "municipio" else
-    {"headerName": "PM2.5", "field": "avg_pm25"} if col == "avg_pm25" else
-    {"headerName": "Calidad del Aire", "field": "color_label"} if col == "color_label" else
-    {"headerName": col, "field": col} for col in dataframe.columns if col != "sparkline" and col not in ["sensor_count", "municipio_order"]
-]
 
 #----------
 
@@ -176,8 +182,9 @@ layout = dbc.Container([
                                     'sortable': True,
                                     'filter': 'agTextColumnFilter',
                                     'resizable': True
-                                },
-                            )                        )
+                                }                            
+                            )                        
+                        )
                     )
                 )
             ])
