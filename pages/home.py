@@ -11,20 +11,10 @@ import dash_table
 
 dash.register_page(__name__, path="/")
 
-
-# Footer
-correo = html.Div(
-    "📩 contacto@observatoriodelaire.com",
-    style={"font-size": "16px"}
-)
-telefono = html.Div(
-    "📞 81 2314 3857",
-    style={"font-size": "16px", "margin-left": "30px"}
-)
-
 #----------
 
 # Air Quality data
+
 # Connect to database.
 DATABASE_URL = os.environ.get('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
@@ -77,6 +67,43 @@ def assign_color_label(value):
 # Assign 'color_label' to the original dataframe
 dataframe['color_label'] = dataframe['avg_pm25'].apply(assign_color_label)
 
+#----------
+
+# Air Quality - Map
+
+# Upload data.
+sensors = pd.read_csv("assets/sensores.csv")
+
+# Mapbox token
+token = os.environ['DB_PWD_TER']
+
+# Map Layout
+map_layout = dict(
+    mapbox={
+        'accesstoken': token,
+        'style': "light",
+        'zoom': 12,
+        'center': dict(lat=25.65409262897884, lon=-100.37682059704264)
+    },
+    showlegend=False,
+    margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
+    modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset",
+                         "resetscale", "resetview"]),
+    hoverlabel_bgcolor="#000000"
+)
+
+sensors = px.scatter_mapbox(sensors, lat="lat", lon="lon", custom_data=["nombre", "municipio", "sensor_id"])
+
+sensors.update_traces(hovertemplate="<br>".join([
+    "%{customdata[0]}",
+    "Municipio: %{customdata[1]}",
+    "Sensor ID: %{customdata[2]}"
+    ])
+)
+
+sensors.update_layout(map_layout)
+
+#----------
 
 # Air Quality - Scatter Plot
 
@@ -90,7 +117,6 @@ scatter_dataframe['municipio_order'] = scatter_dataframe.groupby('municipio').ng
 
 # Update the column names
 scatter_dataframe.rename(columns={"color_label": "Calidad del Aire", "avg_pm25": "PM2.5", "municipio": "Municipio"}, inplace=True)
-
 
 scatter_fig = px.scatter(
     scatter_dataframe,
@@ -110,7 +136,6 @@ scatter_fig.update_traces(
         )
     )
 )
-
 
 scatter_fig.update_layout(
     xaxis_title=None,
@@ -157,7 +182,7 @@ layout = dbc.Container([
             html.A(
                 dbc.Row(
                     dbc.Col(
-                        html.Img(src="../assets/logo_occamm.png", height="34px"),
+                        html.Img(src="../assets/logo_datacomun.png", height="32px"),
                         style={"color": "black"}
                     ),
                     align="center", className="g-0"
@@ -183,8 +208,6 @@ layout = dbc.Container([
                             nav=True
                         )
                     ),
-                    dbc.NavItem(dbc.NavLink("Conoce más", href="/conocemas")),
-                    dbc.NavItem(dbc.NavLink("Datos", href="/datos"))
                 ], className="ms-auto", navbar=True),
                 id="navbar-collapse", navbar=True,
             ),
@@ -220,6 +243,24 @@ layout = dbc.Container([
         className="pt-4"
     ),
 
+    # Air Quality - Map
+    dbc.Row(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardHeader("Sensores de Purple Air por Volumen de PM2.5", style={"font-weight": "bold"}),
+                dbc.CardBody(
+                    dcc.Graph(
+                        figure=sensors,
+                        config={'displaylogo': False},
+                        style={"height": "100vh", "width": "100%"},
+                        id="mapa-mobile"
+                    )
+                )            
+            ])
+        ),
+        className="pt-4"
+    ),
+
     # Air Quality - Scatter Plot
     dbc.Row(
         dbc.Col(
@@ -235,144 +276,6 @@ layout = dbc.Container([
             ])
         ),
         className="pt-4"
-    ),
-
-    # Footer - Mobile
-    dbc.Row(
-        dbc.Col([
-            html.B(
-                "Comunícate con nosotros",
-                style = {"font-size": "22px"}
-            ),
-            html.P(
-                "📩 contacto@observatoriodelaire.com",
-                className = "pt-3",
-                style = {"font-size": "16px"}
-            ),
-            html.P(
-                "📞 81 2314 3857",
-                className="pt-1",
-                style = {"font-size": "16px"}
-            ),
-            html.P(
-                "📍 Blvd. Antonio L. Rodriguez #2100, Colonia Santa María, Monterrey, Nuevo León.",
-                className="pt-1",
-                style = {"font-size": "16px"}
-            ),
-            html.Br(),
-            html.Div(
-                [
-                    html.A(
-                        href="https://twitter.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/twitter.png",
-                            alt="Twitter",
-                            height="34",
-                            style={"margin-right": "25px"}
-                        ),
-                    ),
-                    html.A(
-                        href="https://www.instagram.com/observatoriomty/",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/instagram.png",
-                            alt="Instagram",
-                            height="32",
-                            style={"margin-right": "25px"}
-                        ),
-                    ),
-                    html.A(
-                        href="https://www.facebook.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/facebook.png",
-                            alt="Facebook",
-                            height="30"
-                        ),
-                    )
-                ],
-                style={"display": "flex"},
-            ),
-            html.P(
-                "© Observatorio Ciudadano de la Calidad del Aire del Área Metropolitana de Monterrey (2023)",
-                className = "pt-4",
-                style = {"font-size": "12px"}
-            )
-        ],
-            style={
-                "background-color": "#F7F7F7",
-            },
-            className = "pt-3 pb-1"
-        ),
-        className="pt-4 d-lg-none"
-    ),
-
-    # Footer - Desktop
-    dbc.Row(
-        dbc.Col([
-            html.B(
-                "Comunícate con nosotros",
-                style={"font-size": "22px"}
-            ),
-            html.P([
-                correo,
-                telefono
-            ],  style={'display': 'flex', 'justify-content': 'center'}, className = "pt-3"
-            ),
-            html.P(
-                "📍 Blvd. Antonio L. Rodriguez #2100, Colonia Santa María, Monterrey, Nuevo León.",
-                className="pt-1",
-                style={"font-size": "16px"}
-            ),
-            html.Br(),
-            html.Div(
-                [
-                    html.A(
-                        href="https://twitter.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/twitter.png",
-                            alt="Twitter",
-                            height="34",
-                            style={"margin-right": "25px"}
-                        ),
-                    ),
-                    html.A(
-                        href="https://www.instagram.com/observatoriomty/",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/instagram.png",
-                            alt="Instagram",
-                            height="32",
-                            style={"margin-right": "25px"}
-                        ),
-                    ),
-                    html.A(
-                        href="https://www.facebook.com/observatoriomty",
-                        target="_blank",
-                        children=html.Img(
-                            src="assets/facebook.png",
-                            alt="Facebook",
-                            height="30"
-                        ),
-                    )
-                ],
-                style={"display": "flex", "align-items": "center", "justify-content": "center"},
-            ),
-            html.P(
-                "© Observatorio Ciudadano de la Calidad del Aire del Área Metropolitana de Monterrey (2023)",
-                className="pt-4",
-                style={"font-size": "12px"}
-            )
-        ],
-            style={
-                "background-color": "#F7F7F7",
-                "text-align": "center"
-            },
-            className="pt-3 pb-1"
-        ),
-        className="pt-4 d-none d-lg-block", style = {"text-align": "center"}
     )
 
 
