@@ -188,9 +188,7 @@ layout = dbc.Container([
                     align="center", className="g-0"
                 ),
                 href="/", style={"text-decoration": "none"}
-            ),
-
-            dbc.NavbarToggler(id="navbar-toggler", n_clicks=0)
+            )
 
         ]),
         color="light", dark=False
