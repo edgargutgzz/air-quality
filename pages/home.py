@@ -182,7 +182,7 @@ layout = dbc.Container([
             html.A(
                 dbc.Row(
                     dbc.Col(
-                        html.Img(src="../assets/logo_datacomun.png", height="32px"),
+                        html.Img(src="../assets/logo_datacomun.png", height="34px"),
                         style={"color": "black"}
                     ),
                     align="center", className="g-0"
@@ -190,27 +190,7 @@ layout = dbc.Container([
                 href="/", style={"text-decoration": "none"}
             ),
 
-            dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
-
-            dbc.Collapse(
-                dbc.Nav([
-                    dbc.NavItem(
-                        dbc.DropdownMenu([
-                            dbc.DropdownMenuItem("OCCAMM", href="/occamm"),
-                            dbc.DropdownMenuItem("Purple Air", href="/purpleair")
-                        ],
-                            label="Mapas",
-                            toggle_style={
-                                "background": "#F8F9FA",
-                                "color": "#7A7B7B",
-                                "border": "none"
-                            },
-                            nav=True
-                        )
-                    ),
-                ], className="ms-auto", navbar=True),
-                id="navbar-collapse", navbar=True,
-            ),
+            dbc.NavbarToggler(id="navbar-toggler", n_clicks=0)
 
         ]),
         color="light", dark=False
