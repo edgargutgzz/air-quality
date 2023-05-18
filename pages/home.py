@@ -8,6 +8,7 @@ import psycopg2
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import dash_table
+from datetime import datetime
 
 dash.register_page(__name__, path="/")
 
@@ -41,7 +42,47 @@ conn.close()
 
 #----------
 
-# Air Quality - Table
+# Air Quality Map
+
+# Upload data.
+sensors = pd.read_csv("assets/sensores.csv")
+
+# Mapbox token
+token = os.environ['DB_PWD_TER']
+
+# Map Layout
+map_layout = dict(
+    mapbox={
+        'accesstoken': token,
+        'style': "light",
+        'zoom': 12,
+        'center': dict(lat=25.685387622008598, lon=-100.31385813323436)
+    },
+    height = 450,
+    showlegend=False,
+    margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
+    modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset",
+                         "resetscale", "resetview"]),
+    hoverlabel_bgcolor="#000000"
+)
+
+sensors = px.scatter_mapbox(sensors, lat="lat", lon="lon", custom_data=["nombre", "municipio", "sensor_id"])
+
+sensors.update_traces(
+    marker=dict(size=12),  # Increase size as needed
+    opacity = .8,
+    hovertemplate="<br>".join([
+        "%{customdata[0]}",
+        "Municipio: %{customdata[1]}",
+        "Sensor ID: %{customdata[2]}"
+    ])
+)
+
+sensors.update_layout(map_layout)
+
+#----------
+
+# Air Quality Table
 max_value = dataframe['avg_pm25'].max()
 
 columnDefs = [
@@ -69,43 +110,7 @@ dataframe['color_label'] = dataframe['avg_pm25'].apply(assign_color_label)
 
 #----------
 
-# Air Quality - Map
-
-# Upload data.
-sensors = pd.read_csv("assets/sensores.csv")
-
-# Mapbox token
-token = os.environ['DB_PWD_TER']
-
-# Map Layout
-map_layout = dict(
-    mapbox={
-        'accesstoken': token,
-        'style': "light",
-        'zoom': 12,
-        'center': dict(lat=25.65409262897884, lon=-100.37682059704264)
-    },
-    showlegend=False,
-    margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
-    modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset",
-                         "resetscale", "resetview"]),
-    hoverlabel_bgcolor="#000000"
-)
-
-sensors = px.scatter_mapbox(sensors, lat="lat", lon="lon", custom_data=["nombre", "municipio", "sensor_id"])
-
-sensors.update_traces(hovertemplate="<br>".join([
-    "%{customdata[0]}",
-    "Municipio: %{customdata[1]}",
-    "Sensor ID: %{customdata[2]}"
-    ])
-)
-
-sensors.update_layout(map_layout)
-
-#----------
-
-# Air Quality - Scatter Plot
+# Air Quality Scatter Plot
 
 # Create a copy of the DataFrame for the scatter plot and sort it by 'municipio'
 scatter_dataframe = dataframe.copy()
@@ -144,7 +149,7 @@ scatter_fig.update_layout(
 )
 
 scatter_fig.update_layout(
-    height=600, 
+    height=450, 
     margin=dict(l=20, r=20, t=20, b=20),
     yaxis=dict(  
         tickmode="array",
@@ -194,11 +199,111 @@ layout = dbc.Container([
         color="light", dark=False
     ),
 
-    # Air Quality - Table
+    # Filtros - Desktop
     dbc.Row(
         dbc.Col(
             dbc.Card([
-                dbc.CardHeader("Sensores de Purple Air del Área Metropolitana de Monterrey", style={"font-weight": "bold"}),
+                dbc.CardBody([
+                    dbc.Row([
+                        dbc.Col([
+                            html.P("🏭 Selecciona una fuente de datos", style={"font-weight": "bold"}),
+                            dcc.Dropdown(
+                                id='municipio-dropdown-d',
+                                options=[
+                                    {"label": "Sensores de Purple Air", "value": "Sensores de Purple Air"},
+                                    {"label": "Sensores del Estado de Nuevo León", "value": "Sensores del Estado de Nuevo León", "disabled": True}
+                                ],
+                                value='Sensores de Purple Air',
+                                clearable=False,
+                                style={'backgroundColor': '#e8f2ff'}
+                            )
+                        ]),
+                        dbc.Col([
+                            html.P("📊 Selecciona un indicador", style={"font-weight": "bold"}),
+                            dcc.Dropdown(
+                                id='mes-dropdown-d',
+                                options=[
+                                    {"label": "PM2.5", "value": "PM2.5"},
+                                    {"label": "PM10.0", "value": "PM10.0", "disabled": True},
+                                    {"label": "Temperatura", "value": "Temperatura", "disabled": True}
+                                ],
+                                value='PM2.5',
+                                clearable=False,
+                                style={'backgroundColor': '#e8f2ff'}
+                            )
+                        ])
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            html.P("📅 Selecciona un fecha", style={"font-weight": "bold"}),
+                            dcc.DatePickerRange(
+                                id='date-picker-range',
+                                start_date_placeholder_text="Start Period",
+                                end_date_placeholder_text="End Period",
+                                start_date=datetime(2021, 1, 1),
+                                end_date=datetime(2023, 5, 17),
+                                style = {'width': '100%'}
+                            )
+                        ]),
+                        dbc.Col([
+                            html.P("📍 Selecciona una municipio", style={"font-weight": "bold"}),
+                            dcc.Dropdown(
+                                id='mes-dropdown-d',
+                                options=[
+                                    {"label": "Todos", "value": "Todos"},
+                                    {"label": "Abasolo", "value": "Abasolo", "disabled": True},
+                                    {"label": "El Carmen", "value": "El Carmen", "disabled": True},
+                                    {"label": "Escobedo", "value": "Escobedo", "disabled": True},
+                                    {"label": "García", "value": "García", "disabled": True},
+                                    {"label": "Juárez", "value": "Juárez", "disabled": True},
+                                    {"label": "Allende", "value": "Allende", "disabled": True},
+                                    {"label": "Apodaca", "value": "Apodaca", "disabled": True},
+                                    {"label": "Cadereyta Jimenez", "value": "Cadereyta Jimenez", "disabled": True},
+                                    {"label": "Cienega de Flores", "value": "Cienega de Flores", "disabled": True},
+                                    {"label": "Guadalupe", "value": "Guadalupe", "disabled": True},
+                                    {"label": "Monterrey", "value": "Monterrey", "disabled": True},
+                                    {"label": "Salinas Victoria", "value": "Salinas Victoria", "disabled": True},
+                                    {"label": "San Nicolás de los Garza", "value": "San Nicolás de los Garza", "disabled": True},
+                                    {"label": "San Pedro Garza García", "value": "San Pedro Garza García", "disabled": True},
+                                    {"label": "Santa Catarina", "value": "Santa Catarina", "disabled": True},
+                                    {"label": "Santiago", "value": "Santiago", "disabled": True}
+                                ],
+                                value='Todos',
+                                clearable=False,
+                                style={'backgroundColor': '#e8f2ff'}
+                            )
+                        ])
+                    ], className="pt-5")
+                ])
+            ]),
+            className="pt-4 d-none d-lg-block"
+        )
+    ),
+
+
+    # Air Quality Map - Mobile and Desktop
+    dbc.Row(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
+                dbc.CardBody(
+                    dcc.Graph(
+                        figure=sensors,
+                        config={'displaylogo': False},
+                        #style={"height": "100vh", "width": "100%"},
+                        id="mapa-mobile"
+                    )
+                )            
+            ])
+        ),
+        className="pt-4"
+    ),
+
+    # Air Quality Table - Mobile and Desktop
+    dbc.Row(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
                 dbc.CardBody(
                     html.Div(
                         html.Div(
@@ -212,7 +317,7 @@ layout = dbc.Container([
                                     'filter': 'agTextColumnFilter',
                                     'resizable': True
                                 }                            
-                            )                        
+                            )
                         )
                     )
                 )
@@ -221,25 +326,7 @@ layout = dbc.Container([
         className="pt-4"
     ),
 
-    # Air Quality - Map
-    dbc.Row(
-        dbc.Col(
-            dbc.Card([
-                dbc.CardHeader("Sensores de Purple Air por Volumen de PM2.5", style={"font-weight": "bold"}),
-                dbc.CardBody(
-                    dcc.Graph(
-                        figure=sensors,
-                        config={'displaylogo': False},
-                        style={"height": "100vh", "width": "100%"},
-                        id="mapa-mobile"
-                    )
-                )            
-            ])
-        ),
-        className="pt-4"
-    ),
-
-    # Air Quality - Scatter Plot
+    # Air Quality Scatter Plot - Mobile and Desktop
     dbc.Row(
         dbc.Col(
             dbc.Card([
@@ -255,7 +342,6 @@ layout = dbc.Container([
         ),
         className="pt-4"
     )
-
 
 ])
 
