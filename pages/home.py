@@ -34,6 +34,7 @@ GROUP BY sensor_id, nombre, municipio
 ORDER BY MIN(date);
 """
 
+
 dataframe = pd.read_sql(query, conn)
 dataframe.sort_values(by='avg_pm25', ascending=False, inplace=True) 
 
@@ -83,7 +84,7 @@ sensors.update_layout(map_layout)
 #----------
 
 # Air Quality Table
-max_value = dataframe['avg_pm25'].max()
+#max_value = dataframe['avg_pm25'].max()
 
 columnDefs = [
     {"headerName": "ID", "field": "sensor_id", "flex": 1},
@@ -246,7 +247,7 @@ layout = dbc.Container([
                             )
                         ]),
                         dbc.Col([
-                            html.P("📍 Selecciona una municipio", style={"font-weight": "bold"}),
+                            html.P("📍 Selecciona un municipio", style={"font-weight": "bold"}),
                             dcc.Dropdown(
                                 id='mes-dropdown-d',
                                 options=[
