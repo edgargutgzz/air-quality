@@ -84,8 +84,6 @@ sensors.update_layout(map_layout)
 #----------
 
 # Air Quality Table
-#max_value = dataframe['avg_pm25'].max()
-
 columnDefs = [
     {"headerName": "ID", "field": "sensor_id", "flex": 1},
     {"headerName": "Sensor", "field": "nombre", "flex": 3},
@@ -200,6 +198,93 @@ layout = dbc.Container([
         color="light", dark=False
     ),
 
+    # Filtros - Mobile
+    dbc.Row(
+        dbc.Col(
+            dbc.Card([
+                dbc.CardBody([
+                    dbc.Row(
+                        dbc.Col([
+                            html.P("🏭 Selecciona una fuente de datos", style={"font-weight": "bold"}),
+                            dcc.Dropdown(
+                                id='municipio-dropdown-d',
+                                options=[
+                                    {"label": "Sensores de Purple Air", "value": "Sensores de Purple Air"},
+                                    {"label": "Sensores del Estado de Nuevo León", "value": "Sensores del Estado de Nuevo León", "disabled": True}
+                                ],
+                                value='Sensores de Purple Air',
+                                clearable=False,
+                                style={'backgroundColor': '#e8f2ff'}
+                            )
+                        ])
+                    ),
+                    dbc.Row(
+                        dbc.Col([
+                            html.P("📊 Selecciona un indicador", style={"font-weight": "bold"}, className = "pt-4"),
+                            dcc.Dropdown(
+                                id='mes-dropdown-d',
+                                options=[
+                                    {"label": "PM2.5", "value": "PM2.5"},
+                                    {"label": "PM10.0", "value": "PM10.0", "disabled": True},
+                                    {"label": "Temperatura", "value": "Temperatura", "disabled": True}
+                                ],
+                                value='PM2.5',
+                                clearable=False,
+                                style={'backgroundColor': '#e8f2ff'}
+                            )
+                        ])
+                    ),
+                    dbc.Row(
+                        dbc.Col([
+                            html.P("📍 Selecciona un municipio", style={"font-weight": "bold"}, className = "pt-4"),
+                            dcc.Dropdown(
+                                id='mes-dropdown-d',
+                                options=[
+                                    {"label": "Todos", "value": "Todos"},
+                                    {"label": "Abasolo", "value": "Abasolo", "disabled": True},
+                                    {"label": "El Carmen", "value": "El Carmen", "disabled": True},
+                                    {"label": "Escobedo", "value": "Escobedo", "disabled": True},
+                                    {"label": "García", "value": "García", "disabled": True},
+                                    {"label": "Juárez", "value": "Juárez", "disabled": True},
+                                    {"label": "Allende", "value": "Allende", "disabled": True},
+                                    {"label": "Apodaca", "value": "Apodaca", "disabled": True},
+                                    {"label": "Cadereyta Jimenez", "value": "Cadereyta Jimenez", "disabled": True},
+                                    {"label": "Cienega de Flores", "value": "Cienega de Flores", "disabled": True},
+                                    {"label": "Guadalupe", "value": "Guadalupe", "disabled": True},
+                                    {"label": "Monterrey", "value": "Monterrey", "disabled": True},
+                                    {"label": "Salinas Victoria", "value": "Salinas Victoria", "disabled": True},
+                                    {"label": "San Nicolás de los Garza", "value": "San Nicolás de los Garza", "disabled": True},
+                                    {"label": "San Pedro Garza García", "value": "San Pedro Garza García", "disabled": True},
+                                    {"label": "Santa Catarina", "value": "Santa Catarina", "disabled": True},
+                                    {"label": "Santiago", "value": "Santiago", "disabled": True}
+                                ],
+                                value='Todos',
+                                clearable=False,
+                                style={'backgroundColor': '#e8f2ff'}
+                            )
+                        ])
+                    ),
+                    dbc.Row(
+                        dbc.Col([
+                            html.P("📅 Selecciona un fecha", style={"font-weight": "bold"}, className = "pt-4"),
+                            dcc.DatePickerRange(
+                                id='date-picker-range',
+                                start_date_placeholder_text="Start Period",
+                                end_date_placeholder_text="End Period",
+                                start_date=datetime(2023, 5, 8),
+                                end_date=datetime(2023, 5, 23),
+                                min_date_allowed=datetime(2023, 5, 23),
+                                max_date_allowed=datetime(2023, 5, 8),
+                                display_format="DD/MM/YYYY"
+                            )
+                        ])
+                    )
+                ])
+            ]),
+            className="pt-4 d-lg-none"
+        )
+    ),
+
     # Filtros - Desktop
     dbc.Row(
         dbc.Col(
@@ -236,17 +321,6 @@ layout = dbc.Container([
                     ]),
                     dbc.Row([
                         dbc.Col([
-                            html.P("📅 Selecciona un fecha", style={"font-weight": "bold"}),
-                            dcc.DatePickerRange(
-                                id='date-picker-range',
-                                start_date_placeholder_text="Start Period",
-                                end_date_placeholder_text="End Period",
-                                start_date=datetime(2021, 1, 1),
-                                end_date=datetime(2023, 5, 17),
-                                style = {'width': '100%'}
-                            )
-                        ]),
-                        dbc.Col([
                             html.P("📍 Selecciona un municipio", style={"font-weight": "bold"}),
                             dcc.Dropdown(
                                 id='mes-dropdown-d',
@@ -273,6 +347,19 @@ layout = dbc.Container([
                                 clearable=False,
                                 style={'backgroundColor': '#e8f2ff'}
                             )
+                        ]),
+                        dbc.Col([
+                            html.P("📅 Selecciona un fecha", style={"font-weight": "bold"}),
+                            dcc.DatePickerRange(
+                                id='date-picker-range',
+                                start_date_placeholder_text="Start Period",
+                                end_date_placeholder_text="End Period",
+                                start_date=datetime(2023, 5, 8),
+                                end_date=datetime(2023, 5, 23),
+                                min_date_allowed=datetime(2023, 5, 23),
+                                max_date_allowed=datetime(2023, 5, 8),
+                                display_format="DD/MM/YYYY"
+                            )
                         ])
                     ], className="pt-5")
                 ])
@@ -280,7 +367,6 @@ layout = dbc.Container([
             className="pt-4 d-none d-lg-block"
         )
     ),
-
 
     # Air Quality Map - Mobile and Desktop
     dbc.Row(

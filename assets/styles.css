@@ -1,0 +1,27 @@
+/* Delineado date */
+.DateInput_input__focused {
+    outline: 0;
+    background: #ffffff;
+    border: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 2px solid #212529;
+    border-left: 0;
+}
+
+/* Shortcut */
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+    border-top: 26px solid transparent;
+    border-right: 33px solid #ffffff;
+    bottom: 0;
+    right: 0;
+}
+
+/* Date Border Radius */
+.DateRangePicker {
+    border-radius: 2px !important;
+}
+
+
+
+
