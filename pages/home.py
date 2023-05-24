@@ -56,7 +56,7 @@ map_layout = dict(
     mapbox={
         'accesstoken': token,
         'style': "light",
-        'zoom': 12,
+        'zoom': 11,
         'center': dict(lat=25.685387622008598, lon=-100.31385813323436)
     },
     height = 450,
@@ -115,29 +115,61 @@ dataframe['color_label'] = dataframe['avg_pm25'].apply(assign_color_label)
 scatter_dataframe = dataframe.copy()
 scatter_dataframe.sort_values(by='municipio', ascending=False, inplace=True)
 
-scatter_dataframe['color_label'] = scatter_dataframe['avg_pm25'].apply(assign_color_label)
+# Define the assign_color_label function
+def assign_color_label(value):
+    if value <= 25:
+        return "Buena"
+    elif 26 <= value <= 45:
+        return "Aceptable"
+    elif 46 <= value <= 79:
+        return "Mala"
+    elif 80 <= value <= 147:
+        return "Muy Mala"
+    else:
+        return "Extremadamente Mala"
+
+# Assign color labels
+scatter_dataframe['Calidad del Aire'] = scatter_dataframe['avg_pm25'].apply(assign_color_label)
+
+# Colors with transparency
+color_map = {
+    "Buena": "rgba(105,214,179,0.8)",    # green
+    "Aceptable": "rgba(238,238,0,0.8)",    # yellow
+    "Mala": "rgba(255,126,0,0.8)",    # orange
+    "Muy Mala": "rgba(255,2,0,0.8)",    # red
+    "Extremadamente Mala": "rgba(91,50,176,0.8)",    # purple
+}
+
 scatter_dataframe['sensor_count'] = range(1, len(scatter_dataframe) + 1)
 scatter_dataframe['municipio_order'] = scatter_dataframe.groupby('municipio').ngroup()
 
-# Update the column names
-scatter_dataframe.rename(columns={"color_label": "Calidad del Aire", "avg_pm25": "PM2.5", "municipio": "Municipio"}, inplace=True)
+scatter_dataframe.rename(columns={"avg_pm25": "PM2.5", "municipio": "Municipio"}, inplace=True)
 
 scatter_fig = px.scatter(
     scatter_dataframe,
     x="PM2.5",
     y='Municipio',
-    color="Calidad del Aire",
-    color_discrete_sequence=["#00FF00", "#0000FF", "#FFFF00", "#FFA500", "#FF0000"],
     title=None,
-    hover_name='nombre'
+    hover_name='nombre',
+    custom_data=["nombre", "Calidad del Aire"],  # Add 'nombre' to the custom data
 )
 
 scatter_fig.update_traces(
+    hovertemplate="<br>".join([
+        "<b>%{customdata[0]}</b>",  # Display the sensor name in bold
+        "Calidad del Aire = %{customdata[1]}",  # Adjust the index for 'Calidad del Aire' to 1
+        "PM2.5 = %{x:.0f}",  # Use .0f to round to nearest whole number
+        "Municipio = %{y}",
+    ]),
+    hoverinfo="none",  # Prevent Plotly from automatically adding data to the hover labels
+    #opacity = .9,
     marker=dict(
+        size=15,  # Adjust the size here
         line=dict(
             width=1,  # Modify the width of the border here
-            color='grey'  # Set the color of the border
-        )
+            color='white'  # Set the color of the border
+        ),
+        color=scatter_dataframe['Calidad del Aire'].map(color_map)  # Use the color map here
     )
 )
 
@@ -150,10 +182,10 @@ scatter_fig.update_layout(
 scatter_fig.update_layout(
     height=450, 
     margin=dict(l=20, r=20, t=20, b=20),
+    plot_bgcolor='rgb(232,242,255)',  # light grey
     yaxis=dict(  
         tickmode="array",
         tickvals=scatter_dataframe["Municipio"],
-        ticktext=["   " + label + "   " for label in scatter_dataframe["Municipio"]],
         tickfont=dict(size=14),
         tickangle=0,
         ticklen=10,
@@ -173,6 +205,8 @@ scatter_fig.update_layout(
         dtick=1 # add this dtick value to adjust tick spacing
     )
 )
+
+
 
 #----------
 
@@ -417,7 +451,7 @@ layout = dbc.Container([
     dbc.Row(
         dbc.Col(
             dbc.Card([
-                dbc.CardHeader("Sensores de Purple Air por Volumen de PM2.5", style={"font-weight": "bold"}),
+                dbc.CardHeader("Sensores de Purple Air por Volumen Promedio de PM2.5", style={"font-weight": "bold"}),
                 dbc.CardBody(
                     dcc.Graph(
                         id='scatter_plot',
