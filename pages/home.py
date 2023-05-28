@@ -203,7 +203,6 @@ scatter_fig.update_layout(
 
 #----------
 # Page layout
-
 layout = html.Div([
 
     # Texto introductorio - Mobile and Desktop
@@ -234,7 +233,7 @@ layout = html.Div([
                         style={"text-decoration": "none"}
                     )
                 ),
-                className = "pb-4 px-4"
+                className = "pb-4 px-3 pt-2"
             ),
             # Fuente de datos
             dbc.Row(
@@ -251,7 +250,7 @@ layout = html.Div([
                         style={'backgroundColor': '#F8F9FA'}
                     )
                 ]),
-                className = "pt-4 px-4"
+                className = "pt-4 px-3"
             ),
             # Indicador
             dbc.Row(
@@ -269,7 +268,7 @@ layout = html.Div([
                         style={'backgroundColor': '#F8F9FA'}
                     )
                 ]),
-                className = "pt-4 px-4"
+                className = "pt-4 px-3"
             ),
             # Municipio
             dbc.Row(
@@ -301,7 +300,7 @@ layout = html.Div([
                         style={'backgroundColor': '#F8F9FA'}
                     )
                 ]),
-                className = "pt-4 px-4"
+                className = "pt-4 px-3"
             ),
             # Fecha
             dbc.Row(
@@ -318,60 +317,83 @@ layout = html.Div([
                         display_format="DD/MM/YYYY"
                     )
                 ]),
-                className = "pt-4 px-4"
+                className = "pt-4 px-3"
             )
         ],
-        className='pt-4 fixed-sidebar',
-        width=3
+        className='pt-4',
+        width=3,
+        style = {
+            "position": "fixed", 
+            "top": 0,
+            "height": "100vh",
+            "border-right": "1px solid #DBDBDB",
+        }
         ),
 
         # Visualizaciones
         dbc.Col([
             # Mapa
-            dbc.Card([
-                dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
-                dbc.CardBody(
-                    dcc.Graph(
-                        figure=sensors,
-                        config={'displaylogo': False},
-                        #style={"height": "100vh", "width": "100%"},
-                        id="mapa-mobile"
-                    )
-                )
-            ]),
-            # Tabla
-            dbc.Card([
-                dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
-                dbc.CardBody(
-                    html.Div(
-                        dag.AgGrid(
-                            id='my_ag_grid',
-                            rowData=dataframe.to_dict('records'),
-                            columnDefs=columnDefs,
-                            defaultColDef={
-                                'editable': False,
-                                'sortable': True,
-                                'filter': 'agTextColumnFilter',
-                                'resizable': True
-                            }                            
+            dbc.Row(
+                dbc.Col(
+                    dbc.Card([
+                        dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
+                        dbc.CardBody(
+                            dcc.Graph(
+                                figure=sensors,
+                                config={'displaylogo': False},
+                                id="mapa-mobile"
+                            )
                         )
-                    )
-                )
-            ]),
+                    ])
+                ),
+                className = "pt-4 pb-5"
+            ),
+            # Tabla
+            dbc.Row(
+                dbc.Col(
+                    dbc.Card([
+                        dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
+                        dbc.CardBody(
+                            html.Div(
+                                dag.AgGrid(
+                                    id='my_ag_grid',
+                                    rowData=dataframe.to_dict('records'),
+                                    columnDefs=columnDefs,
+                                    defaultColDef={
+                                        'editable': False,
+                                        'sortable': True,
+                                        'filter': 'agTextColumnFilter',
+                                        'resizable': True
+                                    }                            
+                                )
+                            )
+                        )
+                    ])
+                ),
+                className = "pb-5"
+            ),
             # Scatter Plot
-            dbc.Card([
-                dbc.CardHeader("Sensores de Purple Air por Volumen Promedio de PM2.5", style={"font-weight": "bold"}),
-                dbc.CardBody(
-                    dcc.Graph(
-                        id='scatter_plot',
-                        figure=scatter_fig,
-                        config={'displayModeBar': False}
-                    )
-                )            
-            ])
+            dbc.Row(
+                dbc.Col(
+                    dbc.Card([
+                        dbc.CardHeader("Sensores de Purple Air por Volumen Promedio de PM2.5", style={"font-weight": "bold"}),
+                        dbc.CardBody(
+                            dcc.Graph(
+                                id='scatter_plot',
+                                figure=scatter_fig,
+                                config={'displayModeBar': False}
+                            )
+                        )            
+                    ])
+                ),
+                className = "pb-5"
+            )
         ],
-        className = "pt-3 pb-4 scrollable-content",
-        width=9
+        width=9,
+        className = "px-5",
+        style = {
+            "margin-left": "25%"
+        }
         )
 
     ],

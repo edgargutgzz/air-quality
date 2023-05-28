@@ -21,15 +21,3 @@
 .DateRangePicker {
     border-radius: 2px !important;
 }
-
-/* Fixed Sidebar */
-.fixed-sidebar {
-    position: fixed;
-    height: 100vh;
-    border-right: 1px solid #DBDBDB;
-}
-
-.scrollable-content {
-    height: 100vh;
-    margin-left: 400px; 
-}
