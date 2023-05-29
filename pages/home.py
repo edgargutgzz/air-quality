@@ -205,15 +205,6 @@ scatter_fig.update_layout(
 # Page layout
 layout = html.Div([
 
-    # Texto introductorio - Mobile and Desktop
-    # dbc.Alert(
-    #     "Utiliza los filtros de la izquierda para explorar los datos de calidad del aire en Monterrey.",
-    #     color = "primary",
-    #     dismissable = True,
-    #     duration = 10000,
-    #     class_name = 'mb-0'
-    # ),
-
     # Filtros y Visualizaciones - Desktop
     dbc.Row([
 
@@ -311,16 +302,32 @@ layout = html.Div([
                         start_date_placeholder_text="Start Period",
                         end_date_placeholder_text="End Period",
                         start_date=datetime(2023, 5, 8),
-                        end_date=datetime(2023, 5, 29),
-                        min_date_allowed=datetime(2023, 5, 29),
+                        end_date=datetime(2023, 5, 30),
+                        min_date_allowed=datetime(2023, 5, 30),
                         max_date_allowed=datetime(2023, 5, 8),
                         display_format="DD/MM/YYYY"
                     )
                 ]),
                 className = "pt-4 px-3"
+            ),
+            dbc.Row(
+                dbc.Col(
+                    html.Hr()
+                ),
+                className = "px-3 mt-auto"
+            ),
+            dbc.Row(
+                dbc.Col(
+                    dbc.Button(
+                        "Conoce más",
+                        color = "secondary",
+                        outline = True
+                    )
+                ),
+                className = "px-3 pb-4 pt-2"
             )
         ],
-        className='pt-4',
+        className='pt-4 d-flex flex-column',
         width=3,
         style = {
             "position": "fixed", 
@@ -332,6 +339,19 @@ layout = html.Div([
 
         # Visualizaciones
         dbc.Col([
+
+            # Texto introductorio
+            dbc.Row(
+                dbc.Col(
+                    dbc.Alert(
+                        "Utiliza los filtros de la izquierda para explorar los datos de calidad del aire en Monterrey.",
+                        color = "primary",
+                        dismissable = True,
+                        duration = 10000
+                    )
+                ),
+                className = "pt-4"
+            ),
             # Mapa
             dbc.Row(
                 dbc.Col(
@@ -346,7 +366,7 @@ layout = html.Div([
                         )
                     ])
                 ),
-                className = "pt-4 pb-5"
+                className = "pt-2 pb-5"
             ),
             # Tabla
             dbc.Row(
