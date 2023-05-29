@@ -54,7 +54,31 @@ app.layout = html.Div(
 )
 
 #----------
+# Air Quality Data
+# Connect to database.
+DATABASE_URL = os.environ.get('DATABASE_URL')
+conn = psycopg2.connect(DATABASE_URL)
 
+# Execute the query and fetch data
+query = """
+WITH numbered_rows AS (
+    SELECT a.pollution_id, a.sensor_id, a.pm25, s.nombre, s.municipio,
+           (TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI') - INTERVAL '6 hours') as date
+    FROM air_quality a
+    JOIN sensors s ON a.sensor_id = s.sensor_id
+)
+SELECT pollution_id, sensor_id, pm25, nombre, municipio, TO_CHAR(date, 'YYYY/MM/DD HH24:MI') as date
+FROM numbered_rows
+WHERE date >= TIMESTAMP '2023-05-08 00:00:00'
+ORDER BY date;
+"""
+
+dataframe = pd.read_sql(query, conn)
+
+# Close the connection
+conn.close()
+
+#----------
 # Navbar - Mobile and Desktop
 def toggle_navbar_collapse(n, is_open):
     if n:
@@ -66,6 +90,30 @@ app.callback(
     [Input("navbar-toggler", "n_clicks")],
     [State("navbar-collapse", "is_open")],
 )(toggle_navbar_collapse)
+
+#----------
+# Conoce más
+def toggle_modal(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+app.callback(
+    Output("modal", "is_open"),
+    [Input("open", "n_clicks")],
+    [State("modal", "is_open")],
+)(toggle_modal)
+
+#----------
+# Download button
+def func(n_clicks):
+    return dcc.send_data_frame(dataframe.to_csv, "calidadaire.csv", index = False)
+
+app.callback(
+    Output("download-dataframe-csv", "data"),
+    Input("btn_csv", "n_clicks"),
+    prevent_initial_call=True,
+)(func)
 
 #----------
 

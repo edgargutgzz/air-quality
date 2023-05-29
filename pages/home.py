@@ -238,7 +238,7 @@ layout = html.Div([
                         ],
                         value='Sensores de Purple Air',
                         clearable=False,
-                        style={'backgroundColor': '#F8F9FA'}
+                        style={'backgroundColor': '#FFFFFF'}
                     )
                 ]),
                 className = "pt-4 px-3"
@@ -256,7 +256,7 @@ layout = html.Div([
                         ],
                         value='PM2.5',
                         clearable=False,
-                        style={'backgroundColor': '#F8F9FA'}
+                        style={'backgroundColor': '#FFFFFF'}
                     )
                 ]),
                 className = "pt-4 px-3"
@@ -288,7 +288,7 @@ layout = html.Div([
                         ],
                         value='Todos',
                         clearable=False,
-                        style={'backgroundColor': '#F8F9FA'}
+                        style={'backgroundColor': '#FFFFFF'}
                     )
                 ]),
                 className = "pt-4 px-3"
@@ -316,15 +316,60 @@ layout = html.Div([
                 ),
                 className = "px-3 mt-auto"
             ),
-            dbc.Row(
+            # Conoce más y descargar
+            dbc.Row([
                 dbc.Col(
-                    dbc.Button(
-                        "Conoce más",
-                        color = "secondary",
-                        outline = True
-                    )
+                    html.Div([
+                        dbc.Button(
+                            "ℹ️ Conoce más", 
+                            color = "secondary",
+                            outline = True,
+                            id = "open",
+                            n_clicks = 0,
+                            style={'border-color': '#CCCCCC'}
+                        ),
+                        dbc.Modal([
+                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
+                            dbc.ModalBody([
+                                html.P([
+                                    "Desarrollamos esta plataforma para fortalecer a la ciudadanía en la lucha por crear una ciudad "
+                                    "con mejor calidad de aire para todas y todos. Creemos que faltan más y mejores datos sobre el aire que "
+                                    "respiramos en la ciudad y esta herramienta es nuestra respuesta hacia ello. El sistema actual recolecta cada " 
+                                    "hora datos de los más de 100 "
+                                    "sensores de ",
+                                    html.A("Purple Air",
+                                           href="https://www2.purpleair.com/",
+                                           target="_blank",
+                                           style={"text-decoration": "none"}),
+                                    " en el área metropolitana de Monterrey."
+                                ]),
+                                html.P(
+                                    "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
+                                    "nos puedes enviar un correo a hola@datacomun.org"
+                                )
+                            ])
+                        ],
+                        id = "modal",
+                        is_open = False
+                        )
+                    ]),
+                    className = "pb-4 pt-2"
                 ),
-                className = "px-3 pb-4 pt-2"
+                dbc.Col(
+                    html.Div([
+                        dbc.Button(
+                            "⬇️ Descargar",
+                            id="btn_csv", 
+                            color="secondary",
+                            outline=True,
+                            style={'border-color': '#CCCCCC'}
+                        ),
+                        dcc.Download(id = "download-dataframe-csv")
+                    ]),
+                    className = "pb-4 pt-2"
+                )
+            ],
+            className = "px-3"
             )
         ],
         className='pt-4 d-flex flex-column',
@@ -334,6 +379,7 @@ layout = html.Div([
             "top": 0,
             "height": "100vh",
             "border-right": "1px solid #DBDBDB",
+            "overflow": "auto"
         }
         ),
 
@@ -344,7 +390,7 @@ layout = html.Div([
             dbc.Row(
                 dbc.Col(
                     dbc.Alert(
-                        "Utiliza los filtros de la izquierda para explorar los datos de calidad del aire en Monterrey.",
+                        "Utiliza los filtros de la izquierda para explorar los datos de calidad del aire del área metropolitana de Monterrey.",
                         color = "primary",
                         dismissable = True,
                         duration = 10000
@@ -407,6 +453,13 @@ layout = html.Div([
                     ])
                 ),
                 className = "pb-5"
+            ),
+            # Descarga los datos
+            dbc.Row(
+                dbc.Col(
+                    dbc.Button("Descargar"),
+                    width = 3
+                )
             )
         ],
         width=9,
