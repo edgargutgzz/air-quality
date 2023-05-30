@@ -9,6 +9,9 @@ from dash.dependencies import Input, Output, State
 import plotly.express as px
 import dash_table
 from datetime import datetime
+import plotly.graph_objects as go
+import numpy as np
+
 
 dash.register_page(__name__, path="/")
 
@@ -43,40 +46,48 @@ conn.close()
 # Air Quality Map
 
 # Upload data.
-sensors = pd.read_csv("assets/sensores.csv")
+sensors_df = pd.read_csv("assets/sensores.csv")
 
 # Mapbox token
 token = os.environ['DB_PWD_TER']
 
-# Map Layout
-map_layout = dict(
-    mapbox={
-        'accesstoken': token,
-        'style': "light",
-        'zoom': 11,
-        'center': dict(lat=25.685387622008598, lon=-100.31385813323436)
-    },
-    height = 450,
-    showlegend=False,
+# Convert your dataframe into the Graph Objects format
+sensors_go = go.Figure(data=go.Scattermapbox(
+    lat=sensors_df["lat"],
+    lon=sensors_df["lon"],
+    customdata=np.stack((sensors_df["nombre"], sensors_df["municipio"], sensors_df["sensor_id"]), axis=-1),
+    mode='markers',
+    marker=dict(size=14, opacity = .8),
+    hovertemplate="%{customdata[0]}<br>Municipio: %{customdata[1]}<br> Sensor ID: %{customdata[2]}",
+    name="Sensores de Purple Air   ",
+
+))
+
+# Update layout
+sensors_go.update_layout(
+    mapbox=dict(
+        accesstoken=token,
+        style="light",
+        zoom=10,
+        center=dict(lat=25.685387622008598, lon=-100.31385813323436)
+    ),
+    height=450,
     margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
-    modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset",
-                         "resetscale", "resetview"]),
-    hoverlabel_bgcolor="#000000"
+    modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset", "resetscale", "resetview"]),
+    showlegend=True,
+    legend=dict(
+        x=.97,
+        y=.95,
+        traceorder="normal",
+        font=dict(
+            family="sans-serif",
+            size=14,
+            color="black"
+        ),
+        xanchor='right', 
+        yanchor='top' 
+    )
 )
-
-sensors = px.scatter_mapbox(sensors, lat="lat", lon="lon", custom_data=["nombre", "municipio", "sensor_id"])
-
-sensors.update_traces(
-    marker=dict(size=12),  # Increase size as needed
-    opacity = .8,
-    hovertemplate="<br>".join([
-        "%{customdata[0]}",
-        "Municipio: %{customdata[1]}",
-        "Sensor ID: %{customdata[2]}"
-    ])
-)
-
-sensors.update_layout(map_layout)
 
 #----------
 # Air Quality Table
@@ -401,16 +412,15 @@ layout = html.Div([
             # Mapa
             dbc.Row(
                 dbc.Col(
-                    dbc.Card([
-                        dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
+                    dbc.Card(
                         dbc.CardBody(
                             dcc.Graph(
-                                figure=sensors,
+                                figure=sensors_go,
                                 config={'displaylogo': False},
                                 id="mapa-mobile"
                             )
                         )
-                    ])
+                    )
                 ),
                 className = "pt-2 pb-5"
             ),
@@ -453,13 +463,6 @@ layout = html.Div([
                     ])
                 ),
                 className = "pb-5"
-            ),
-            # Descarga los datos
-            dbc.Row(
-                dbc.Col(
-                    dbc.Button("Descargar"),
-                    width = 3
-                )
             )
         ],
         width=9,
