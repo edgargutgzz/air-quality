@@ -70,7 +70,7 @@ sensors_go.update_layout(
         zoom=10,
         center=dict(lat=25.685387622008598, lon=-100.31385813323436)
     ),
-    height=450,
+    height=500,
     margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
     modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset", "resetscale", "resetview"]),
     showlegend=True,
@@ -139,11 +139,11 @@ scatter_dataframe['Calidad del Aire'] = scatter_dataframe['avg_pm25'].apply(assi
 
 # Colors with transparency
 color_map = {
-    "Buena": "rgba(105,214,179,0.8)",    # green
-    "Aceptable": "rgba(238,238,0,0.8)",    # yellow
-    "Mala": "rgba(255,126,0,0.8)",    # orange
-    "Muy Mala": "rgba(255,2,0,0.8)",    # red
-    "Extremadamente Mala": "rgba(91,50,176,0.8)",    # purple
+    "Buena": "rgba(0,205,0,0.8)",    # green
+    "Aceptable": "rgba(255,215,0,0.8)",    # yellow
+    "Mala": "rgba(250,135,0,0.8)",    # orange
+    "Muy Mala": "rgba(235,0,0,0.8)",    # red
+    "Extremadamente Mala": "rgba(188,23,255,0.8)",    # purple
 }
 
 scatter_dataframe['sensor_count'] = range(1, len(scatter_dataframe) + 1)
@@ -157,48 +157,48 @@ scatter_fig = px.scatter(
     y='Municipio',
     title=None,
     hover_name='nombre',
-    custom_data=["nombre", "Calidad del Aire"],  # Add 'nombre' to the custom data
+    custom_data=["nombre", "Calidad del Aire", "sensor_id"], 
 )
 
 scatter_fig.update_traces(
     hovertemplate="<br>".join([
-        "<b>%{customdata[0]}</b>",  # Display the sensor name in bold
-        "Calidad del Aire = %{customdata[1]}",  # Adjust the index for 'Calidad del Aire' to 1
-        "PM2.5 = %{x:.0f}",  # Use .0f to round to nearest whole number
-        "Municipio = %{y}",
+        "Sensor: %{customdata[0]}",
+        "Municipio: %{y}",
+        "ID: %{customdata[2]}",
+        "PM2.5: %{x:.0f}",
+        "Calidad del Aire: %{customdata[1]}"
     ]),
-    hoverinfo="none",  # Prevent Plotly from automatically adding data to the hover labels
-    #opacity = .9,
+    hoverinfo="none", 
     marker=dict(
-        size=15,  # Adjust the size here
+        size=15, 
         line=dict(
-            width=1,  # Modify the width of the border here
-            color='white'  # Set the color of the border
+            width=1,  
+            color='white' 
         ),
-        color=scatter_dataframe['Calidad del Aire'].map(color_map)  # Use the color map here
+        color=scatter_dataframe['Calidad del Aire'].map(color_map)  
     )
 )
 
 scatter_fig.update_layout(
-    xaxis_title=None,
+    xaxis_title= "",
     yaxis_title=None,
     showlegend=False,
-)
-
-scatter_fig.update_layout(
-    height=450, 
-    margin=dict(l=20, r=20, t=20, b=20),
-    plot_bgcolor='rgb(232,242,255)',  # light grey
+    height=500, 
+    margin=dict(l=20, r=20, t=20, b=30),
+    plot_bgcolor='rgb(240,240,239)', 
     yaxis=dict(  
         tickmode="array",
         tickvals=scatter_dataframe["Municipio"],
+        ticktext=[str(label) + "   " for label in scatter_dataframe["Municipio"]],
         tickfont=dict(size=14),
         tickangle=0,
         ticklen=10,
-        tickcolor='white'
+        tickcolor='white',
+        automargin = True
     ),
     xaxis=dict(  
         tickmode="auto",
+        side = "bottom",
         tickfont=dict(size=14),
         tickangle=0,
         ticklen=10,
@@ -208,8 +208,19 @@ scatter_fig.update_layout(
         ticksuffix="   ",
         tickvals=scatter_dataframe["PM2.5"],
         ticktext=["   " + str(label) + "   " for label in scatter_dataframe["PM2.5"]],
-        dtick=1 # add this dtick value to adjust tick spacing
-    )
+        dtick=1 
+    ),
+    annotations=[
+        dict(
+            x=0, 
+            y=-0.12,  
+            showarrow=False,
+            text="<b>PM2.5</b>",
+            xref="paper",
+            yref="paper",
+            font=dict(size=14),
+        )
+    ]
 )
 
 #----------
@@ -401,7 +412,7 @@ layout = html.Div([
             dbc.Row(
                 dbc.Col(
                     dbc.Alert(
-                        "Utiliza los filtros de la izquierda para explorar los datos de calidad del aire del área metropolitana de Monterrey.",
+                        "🔍 Utiliza los filtros de la izquierda para explorar los datos de calidad del aire del área metropolitana de Monterrey.",
                         color = "primary",
                         dismissable = True,
                         duration = 10000
@@ -450,8 +461,7 @@ layout = html.Div([
             # Scatter Plot
             dbc.Row(
                 dbc.Col(
-                    dbc.Card([
-                        dbc.CardHeader("Sensores de Purple Air por Volumen Promedio de PM2.5", style={"font-weight": "bold"}),
+                    dbc.Card(
                         dbc.CardBody(
                             dcc.Graph(
                                 id='scatter_plot',
@@ -459,7 +469,7 @@ layout = html.Div([
                                 config={'displayModeBar': False}
                             )
                         )            
-                    ])
+                    )
                 ),
                 className = "pb-5"
             )
