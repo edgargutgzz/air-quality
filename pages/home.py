@@ -7,7 +7,6 @@ import os
 import psycopg2
 from dash.dependencies import Input, Output, State
 import plotly.express as px
-import dash_table
 from datetime import datetime
 import plotly.graph_objects as go
 import numpy as np
@@ -16,7 +15,7 @@ import numpy as np
 dash.register_page(__name__, path="/")
 
 #----------
-# Air Quality data
+# Data
 
 # Connect to database.
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -43,7 +42,7 @@ dataframe.sort_values(by='avg_pm25', ascending=False, inplace=True)
 conn.close()
 
 #----------
-# Air Quality Map
+# Mapa
 
 # Upload data.
 sensors_df = pd.read_csv("assets/sensores.csv")
@@ -58,7 +57,7 @@ sensors_go = go.Figure(data=go.Scattermapbox(
     customdata=np.stack((sensors_df["nombre"], sensors_df["municipio"], sensors_df["sensor_id"]), axis=-1),
     mode='markers',
     marker=dict(size=14, opacity = .8),
-    hovertemplate="%{customdata[0]}<br>Municipio: %{customdata[1]}<br> Sensor ID: %{customdata[2]}",
+    hovertemplate="Sensor: %{customdata[0]}<br>Municipio: %{customdata[1]}<br>ID: %{customdata[2]}",
     name="Sensores de Purple Air   ",
 
 ))
@@ -90,32 +89,33 @@ sensors_go.update_layout(
 )
 
 #----------
-# Air Quality Table
+# Tabla
+
 columnDefs = [
-    {"headerName": "ID", "field": "sensor_id", "flex": 1},
     {"headerName": "Sensor", "field": "nombre", "flex": 3},
     {"headerName": "Municipio", "field": "municipio", "flex": 2},
-    {"headerName": "PM2.5", "field": "avg_pm25", "flex": 2},
+    {"headerName": "ID", "field": "sensor_id", "flex": 1},
+    {"headerName": "PM2.5", "field": "avg_pm25", "flex": 1},
     {"headerName": "Calidad del Aire", "field": "color_label", "flex": 2}
 ]
 
 def assign_color_label(value):
     if value <= 25:
-        return "Buena"
+        return "🟢 Buena"
     elif 26 <= value <= 45:
-        return "Aceptable"
+        return "🟡 Aceptable"
     elif 46 <= value <= 79:
-        return "Mala"
+        return "🟠 Mala"
     elif 80 <= value <= 147:
-        return "Muy Mala"
+        return "🔴 Muy Mala"
     else:
-        return "Extremadamente Mala"
+        return "🟣 Extremadamente Mala"
 
 # Assign 'color_label' to the original dataframe
 dataframe['color_label'] = dataframe['avg_pm25'].apply(assign_color_label)
 
 #----------
-# Air Quality Scatter Plot
+# Scatter Plot
 
 # Create a copy of the DataFrame for the scatter plot and sort it by 'municipio'
 scatter_dataframe = dataframe.copy()
@@ -313,8 +313,8 @@ layout = html.Div([
                         start_date_placeholder_text="Start Period",
                         end_date_placeholder_text="End Period",
                         start_date=datetime(2023, 5, 8),
-                        end_date=datetime(2023, 5, 30),
-                        min_date_allowed=datetime(2023, 5, 30),
+                        end_date=datetime(2023, 5, 31),
+                        min_date_allowed=datetime(2023, 5, 31),
                         max_date_allowed=datetime(2023, 5, 8),
                         display_format="DD/MM/YYYY"
                     )
@@ -427,8 +427,7 @@ layout = html.Div([
             # Tabla
             dbc.Row(
                 dbc.Col(
-                    dbc.Card([
-                        dbc.CardHeader("Sensores de Purple Air", style={"font-weight": "bold"}),
+                    dbc.Card(
                         dbc.CardBody(
                             html.Div(
                                 dag.AgGrid(
@@ -444,7 +443,7 @@ layout = html.Div([
                                 )
                             )
                         )
-                    ])
+                    )
                 ),
                 className = "pb-5"
             ),

@@ -79,19 +79,6 @@ dataframe = pd.read_sql(query, conn)
 conn.close()
 
 #----------
-# Navbar - Mobile and Desktop
-def toggle_navbar_collapse(n, is_open):
-    if n:
-        return not is_open
-    return is_open
-
-app.callback(
-    Output("navbar-collapse", "is_open"),
-    [Input("navbar-toggler", "n_clicks")],
-    [State("navbar-collapse", "is_open")],
-)(toggle_navbar_collapse)
-
-#----------
 # Conoce más
 def toggle_modal(n, is_open):
     if n:
