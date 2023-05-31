@@ -324,8 +324,8 @@ layout = html.Div([
                         start_date_placeholder_text="Start Period",
                         end_date_placeholder_text="End Period",
                         start_date=datetime(2023, 5, 8),
-                        end_date=datetime(2023, 5, 31),
-                        min_date_allowed=datetime(2023, 5, 31),
+                        end_date=datetime(2023, 6, 1),
+                        min_date_allowed=datetime(2023, 6, 1),
                         max_date_allowed=datetime(2023, 5, 8),
                         display_format="DD/MM/YYYY"
                     )
@@ -346,32 +346,43 @@ layout = html.Div([
                             "ℹ️ Conoce más", 
                             color = "secondary",
                             outline = True,
-                            id = "open",
+                            id = "open_conocemas",
                             n_clicks = 0,
                             style={'border-color': '#CCCCCC'}
                         ),
                         dbc.Modal([
-                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
+                            dbc.ModalHeader(
+                                dbc.ModalTitle(
+                                    dbc.Col(
+                                        html.Img(src="../assets/logo_datacomun.png", height="32px"),
+                                        style={"color": "black"}
+                                    )
+                                )
+                            ),
                             dbc.ModalBody([
                                 html.P([
                                     "Desarrollamos esta plataforma para fortalecer a la ciudadanía en la lucha por crear una ciudad "
-                                    "con mejor calidad de aire para todas y todos. Creemos que faltan más y mejores datos sobre el aire que "
-                                    "respiramos en la ciudad y esta herramienta es nuestra respuesta hacia ello. El sistema actual recolecta cada " 
-                                    "hora datos de los más de 100 "
-                                    "sensores de ",
+                                    "con mejor calidad de aire para todas y todos. El sistema actual recolecta cada " 
+                                    "hora datos de los más de 100 sensores de ",
                                     html.A("Purple Air",
                                            href="https://www2.purpleair.com/",
                                            target="_blank",
                                            style={"text-decoration": "none"}),
                                     " en el área metropolitana de Monterrey."
                                 ]),
-                                html.P(
+                                html.P([
                                     "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
-                                    "nos puedes enviar un correo a hola@datacomun.org"
-                                )
+                                    "nos puedes enviar un correo a hola@datacomun.org o visitar nuestra página en ",
+                                    html.A(
+                                        "datacomun.org",
+                                        href="https://www.datacomun.org/",
+                                        target="_blank",
+                                        style={"text-decoration": "none"}
+                                    )
+                                ])
                             ])
                         ],
-                        id = "modal",
+                        id = "modal_conocemas",
                         is_open = False
                         )
                     ]),
@@ -381,12 +392,35 @@ layout = html.Div([
                     html.Div([
                         dbc.Button(
                             "⬇️ Descargar",
-                            id="btn_csv", 
+                            id="open_descargar", 
                             color="secondary",
                             outline=True,
                             style={'border-color': '#CCCCCC'}
                         ),
-                        dcc.Download(id = "download-dataframe-csv")
+                        dbc.Modal([
+                            dbc.ModalHeader(
+                                dbc.ModalTitle("Descarga los datos")
+                            ),
+                            dbc.ModalBody(
+                                html.P(
+                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados en formato CSV que puedes abrir " 
+                                    "en varias plataformas, incluyendo Excel."
+                                )
+                            ),
+                            dbc.ModalFooter([
+                                dbc.Button(
+                                    "⬇️ Descargar",
+                                    id="boton_descargar", 
+                                    color="secondary",
+                                    outline=True,
+                                    style={'border-color': '#CCCCCC'}
+                                ),
+                                dcc.Download(id = "datos")
+                            ])
+                        ],
+                        id = "modal_descargar",
+                        is_open = False
+                        )
                     ]),
                     className = "pb-4 pt-2"
                 )
@@ -570,7 +604,7 @@ layout = html.Div([
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "32px",
+                                "font-size": "28px",
                                 "cursor": "pointer",
                             }
                         ),
@@ -610,7 +644,7 @@ layout = html.Div([
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "32px",
+                                "font-size": "28px",
                                 "cursor": "pointer",
                             }
                         ),
@@ -647,7 +681,7 @@ layout = html.Div([
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "32px",
+                                "font-size": "28px",
                                 "cursor": "pointer",
                             }
                         ),

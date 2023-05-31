@@ -67,7 +67,7 @@ WITH numbered_rows AS (
     FROM air_quality a
     JOIN sensors s ON a.sensor_id = s.sensor_id
 )
-SELECT pollution_id, sensor_id, pm25, nombre, municipio, TO_CHAR(date, 'YYYY/MM/DD HH24:MI') as date
+SELECT pollution_id, TO_CHAR(date, 'YYYY/MM/DD HH24:MI') as date, nombre, municipio, sensor_id, pm25
 FROM numbered_rows
 WHERE date >= TIMESTAMP '2023-05-08 00:00:00'
 ORDER BY date;
@@ -75,32 +75,47 @@ ORDER BY date;
 
 dataframe = pd.read_sql(query, conn)
 
+dataframe.rename(columns={"nombre": "sensor", "date": "fecha"}, inplace=True)
+
 # Close the connection
 conn.close()
 
 #----------
 # Conoce más
-def toggle_modal(n, is_open):
+def conocemas(n, is_open):
     if n:
         return not is_open
     return is_open
 
 app.callback(
-    Output("modal", "is_open"),
-    [Input("open", "n_clicks")],
-    [State("modal", "is_open")],
-)(toggle_modal)
+    Output("modal_conocemas", "is_open"),
+    [Input("open_conocemas", "n_clicks")],
+    [State("modal_conocemas", "is_open")],
+)(conocemas)
+
+#----------
+# Descargar
+def conocemas(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+app.callback(
+    Output("modal_descargar", "is_open"),
+    [Input("open_descargar", "n_clicks")],
+    [State("modal_descargar", "is_open")],
+)(conocemas)
 
 #----------
 # Download button
-def func(n_clicks):
+def descargar(n_clicks):
     return dcc.send_data_frame(dataframe.to_csv, "calidadaire.csv", index = False)
 
 app.callback(
-    Output("download-dataframe-csv", "data"),
-    Input("btn_csv", "n_clicks"),
+    Output("datos", "data"),
+    Input("boton_descargar", "n_clicks"),
     prevent_initial_call=True,
-)(func)
+)(descargar)
 
 #----------
 
