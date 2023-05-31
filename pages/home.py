@@ -547,7 +547,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pt-2 pb-5 px-2"
+                className = "pt-2 pb-5"
             ),
             # Tabla
             dbc.Row(
@@ -570,7 +570,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pb-5 px-2"
+                className = "pb-5"
             ),
             # Scatter Plot
             dbc.Row(
@@ -585,7 +585,7 @@ layout = html.Div([
                         )            
                     )
                 ),
-                className = "pb-5 px-2"
+                className = "pb-5"
             ),
             # NavBar
             dbc.Row([
@@ -704,7 +704,7 @@ layout = html.Div([
                     className = "d-flex align-items-center justify-content-center"
                 )
             ],  
-                className = "pb-3 pt-3 position-fixed w-100",
+                className = "pb-1 pt-1 position-fixed w-100",
                 style = {"bottom": "0", "background-color": "rgba(255,255,255,0.9)", "z-index": "9999"}
             )
         ]),
