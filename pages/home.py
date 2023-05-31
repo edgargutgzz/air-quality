@@ -170,7 +170,7 @@ scatter_fig.update_traces(
     ]),
     hoverinfo="none", 
     marker=dict(
-        size=15, 
+        size=14, 
         line=dict(
             width=1,  
             color='white' 
@@ -227,7 +227,7 @@ scatter_fig.update_layout(
 # Page layout
 layout = html.Div([
 
-    # Filtros y Visualizaciones - Desktop
+    # Sidebar y Visualizaciones - Desktop
     dbc.Row([
 
         # Sidebar   
@@ -482,8 +482,218 @@ layout = html.Div([
         )
 
     ],
-    className="m-0"
+    className="m-0 d-none d-lg-block"
+    ),
+
+    # Sidebar y Visualizaciones - Mobile
+    dbc.Row(
+        dbc.Col([
+            # Data Comun
+            dbc.Row(
+                dbc.Col(
+                    html.A(
+                        dbc.Row(
+                            dbc.Col(
+                                html.Img(src="../assets/logo_datacomun.png", height="30px"),
+                                style={"color": "black"},
+                                className = "d-flex align-items-center justify-content-center"
+                            ),
+                            justify = "center"
+                        ),
+                        href="/", 
+                        style={"text-decoration": "none"}
+                    )
+                ),
+                className = "pb-4 px-3 pt-4"
+            ),
+            # Mapa
+            dbc.Row(
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            dcc.Graph(
+                                figure=sensors_go,
+                                config={'displaylogo': False},
+                                id="mapa-mobile"
+                            )
+                        )
+                    )
+                ),
+                className = "pt-2 pb-5 px-4"
+            ),
+            # Tabla
+            dbc.Row(
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            html.Div(
+                                dag.AgGrid(
+                                    id='my_ag_grid',
+                                    rowData=dataframe.to_dict('records'),
+                                    columnDefs=columnDefs,
+                                    defaultColDef={
+                                        'editable': False,
+                                        'sortable': True,
+                                        'filter': 'agTextColumnFilter',
+                                        'resizable': True
+                                    }                            
+                                )
+                            )
+                        )
+                    )
+                ),
+                className = "pb-5 px-4"
+            ),
+            # Scatter Plot
+            dbc.Row(
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            dcc.Graph(
+                                id='scatter_plot',
+                                figure=scatter_fig,
+                                config={'displayModeBar': False}
+                            )
+                        )            
+                    )
+                ),
+                className = "pb-5 px-4"
+            ),
+            # NavBar
+            dbc.Row([
+                dbc.Col(
+                    html.Div([
+                        html.Button(
+                            "🔍", 
+                            id="open",
+                            n_clicks=0,
+                            style={
+                                "background": "none",
+                                "border": "none",
+                                "font-size": "32px",
+                                "cursor": "pointer",
+                            }
+                        ),
+                        dbc.Modal([
+                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
+                            dbc.ModalBody([
+                                html.P([
+                                    "Filtra los datos "
+                                    "con mejor calidad de aire para todas y todos. Creemos que faltan más y mejores datos sobre el aire que "
+                                    "respiramos en la ciudad y esta herramienta es nuestra respuesta hacia ello. El sistema actual recolecta cada " 
+                                    "hora datos de los más de 100 "
+                                    "sensores de ",
+                                    html.A("Purple Air",
+                                           href="https://www2.purpleair.com/",
+                                           target="_blank",
+                                           style={"text-decoration": "none"}),
+                                    " en el área metropolitana de Monterrey."
+                                ]),
+                                html.P(
+                                    "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
+                                    "nos puedes enviar un correo a hola@datacomun.org"
+                                )
+                            ])
+                        ],
+                        id = "modal",
+                        is_open = False
+                        )
+                    ]),
+                    className = "d-flex align-items-center justify-content-center"
+                ),
+                dbc.Col(
+                    html.Div([
+                        html.Button(
+                            "⬇️", 
+                            id="open",
+                            n_clicks=0,
+                            style={
+                                "background": "none",
+                                "border": "none",
+                                "font-size": "32px",
+                                "cursor": "pointer",
+                            }
+                        ),
+                        dbc.Modal([
+                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
+                            dbc.ModalBody([
+                                html.P([
+                                    "Descarga los datos "
+                                    "sensores de ",
+                                    html.A("Purple Air",
+                                           href="https://www2.purpleair.com/",
+                                           target="_blank",
+                                           style={"text-decoration": "none"}),
+                                    " en el área metropolitana de Monterrey."
+                                ]),
+                                html.P(
+                                    "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
+                                    "nos puedes enviar un correo a hola@datacomun.org"
+                                )
+                            ])
+                        ],
+                        id = "modal",
+                        is_open = False
+                        )
+                    ]),
+                    className = "d-flex align-items-center justify-content-center"
+                ),
+                dbc.Col(
+                    html.Div([
+                        html.Button(
+                            "ℹ️", 
+                            id="open",
+                            n_clicks=0,
+                            style={
+                                "background": "none",
+                                "border": "none",
+                                "font-size": "32px",
+                                "cursor": "pointer",
+                            }
+                        ),
+                        dbc.Modal([
+                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
+                            dbc.ModalBody([
+                                html.P([
+                                    "Conoce mas "
+                                    "sensores de ",
+                                    html.A("Purple Air",
+                                           href="https://www2.purpleair.com/",
+                                           target="_blank",
+                                           style={"text-decoration": "none"}),
+                                    " en el área metropolitana de Monterrey."
+                                ]),
+                                html.P(
+                                    "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
+                                    "nos puedes enviar un correo a hola@datacomun.org"
+                                )
+                            ])
+                        ],
+                        id = "modal",
+                        is_open = False
+                        )
+                    ]),
+                    className = "d-flex align-items-center justify-content-center"
+                )
+            ],  
+                className = "pb-3 px-5 pt-3 position-fixed w-100",
+                style = {"bottom": "0", "background-color": "rgba(252, 251, 250, 0.95)"}
+            )
+        ]),
+        className = "d-lg-none"
     )
+
+
+
+
+
+
+
+
+
+
+
+
 
 ])
 
