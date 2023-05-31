@@ -11,7 +11,7 @@ external_stylesheets = [{'href': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/d
      'crossorigin': 'anonymous'}]
 
 # Initialize app
-app = Dash(__name__, title= "Aire Limpio - OCCAMM",
+app = Dash(__name__, title= "Calidad del Aire - Data Comun",
            use_pages=True,
            external_stylesheets=external_stylesheets,
            )

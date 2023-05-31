@@ -17,7 +17,12 @@
     right: 0;
 }
 
+/* Hover effect en botones de movil */
 #open:hover {
     transform: scale(1.1);
     transition: all 0.3s ease;
+}
+
+.ag-header-cell-label::after {
+    transition-delay: 0s !important;
 }

@@ -54,10 +54,10 @@ token = os.environ['DB_PWD_TER']
 sensors_go = go.Figure(data=go.Scattermapbox(
     lat=sensors_df["lat"],
     lon=sensors_df["lon"],
-    customdata=np.stack((sensors_df["nombre"], sensors_df["municipio"], sensors_df["sensor_id"]), axis=-1),
+    customdata=np.stack((sensors_df["nombre"], sensors_df["municipio"]), axis=-1),
     mode='markers',
     marker=dict(size=14, opacity = .8),
-    hovertemplate="Sensor: %{customdata[0]}<br>Municipio: %{customdata[1]}<br>ID: %{customdata[2]}",
+    hovertemplate="Sensor: %{customdata[0]}<br>Municipio: %{customdata[1]}",
     name="Sensores de Purple Air   ",
 
 ))
@@ -92,10 +92,9 @@ sensors_go.update_layout(
 # Tabla
 
 columnDefs = [
-    {"headerName": "Sensor", "field": "nombre", "flex": 3},
+    {"headerName": "Sensor", "field": "nombre", "flex": 2},
     {"headerName": "Municipio", "field": "municipio", "flex": 2},
-    {"headerName": "ID", "field": "sensor_id", "flex": 1},
-    {"headerName": "PM2.5", "field": "avg_pm25", "flex": 1},
+    {"headerName": "PM2.5", "field": "avg_pm25", "flex": 1, 'headerTooltip': 'Promedio global de acuerdo a las mediciones realizadas cada hora.'},
     {"headerName": "Calidad del Aire", "field": "color_label", "flex": 2}
 ]
 
@@ -157,14 +156,13 @@ scatter_fig = px.scatter(
     y='Municipio',
     title=None,
     hover_name='nombre',
-    custom_data=["nombre", "Calidad del Aire", "sensor_id"], 
+    custom_data=["nombre", "Calidad del Aire"], 
 )
 
 scatter_fig.update_traces(
     hovertemplate="<br>".join([
         "Sensor: %{customdata[0]}",
         "Municipio: %{y}",
-        "ID: %{customdata[2]}",
         "PM2.5: %{x:.0f}",
         "Calidad del Aire: %{customdata[1]}"
     ]),
@@ -184,7 +182,7 @@ scatter_fig.update_layout(
     yaxis_title=None,
     showlegend=False,
     height=500, 
-    margin=dict(l=20, r=20, t=20, b=30),
+    margin=dict(l=20, r=20, t=20, b=0),
     plot_bgcolor='rgb(240,240,239)', 
     yaxis=dict(  
         tickmode="array",
@@ -213,7 +211,7 @@ scatter_fig.update_layout(
     annotations=[
         dict(
             x=0, 
-            y=-0.12,  
+            y=-0.105,  
             showarrow=False,
             text="<b>PM2.5</b>",
             xref="paper",
@@ -251,7 +249,7 @@ layout = html.Div([
             # Fuente de datos
             dbc.Row(
                 dbc.Col([
-                    html.P("🏭 Fuente de datos", style={"font-weight": "bold"}),
+                    html.P("🎛️ Fuente de datos", style={"font-weight": "bold"}),
                     dcc.Dropdown(
                         id='municipio-dropdown-d',
                         options=[
@@ -354,7 +352,7 @@ layout = html.Div([
                             dbc.ModalHeader(
                                 dbc.ModalTitle(
                                     dbc.Col(
-                                        html.Img(src="../assets/logo_datacomun.png", height="32px"),
+                                        html.Img(src="../assets/logo_datacomun.png", height="30px"),
                                         style={"color": "black"}
                                     )
                                 )
@@ -446,7 +444,7 @@ layout = html.Div([
             dbc.Row(
                 dbc.Col(
                     dbc.Alert(
-                        "🔍 Utiliza los filtros de la izquierda para explorar los datos de calidad del aire del área metropolitana de Monterrey.",
+                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey de acuerdo a los filtros seleccionados.",
                         color = "primary",
                         dismissable = True,
                         duration = 10000
