@@ -23,6 +23,7 @@
     transition: all 0.3s ease;
 }
 
+/* Tooltip delay */
 .ag-header-cell-label::after {
     transition-delay: 0s !important;
 }

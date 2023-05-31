@@ -7,7 +7,7 @@ import os
 import psycopg2
 from dash.dependencies import Input, Output, State
 import plotly.express as px
-from datetime import datetime
+from datetime import datetime, date
 import plotly.graph_objects as go
 import numpy as np
 
@@ -322,8 +322,8 @@ layout = html.Div([
                         start_date_placeholder_text="Start Period",
                         end_date_placeholder_text="End Period",
                         start_date=datetime(2023, 5, 8),
-                        end_date=datetime(2023, 6, 1),
-                        min_date_allowed=datetime(2023, 6, 1),
+                        end_date=date.today(),
+                        min_date_allowed=datetime(2023, 5, 31),
                         max_date_allowed=datetime(2023, 5, 8),
                         display_format="DD/MM/YYYY"
                     )
@@ -523,20 +523,16 @@ layout = html.Div([
             # Data Comun
             dbc.Row(
                 dbc.Col(
-                    html.A(
-                        dbc.Row(
-                            dbc.Col(
-                                html.Img(src="../assets/logo_datacomun.png", height="30px"),
-                                style={"color": "black"},
-                                className = "d-flex align-items-center justify-content-center"
-                            ),
-                            justify = "center"
+                    dbc.Row(
+                        dbc.Col(
+                            html.Img(src="../assets/logo_datacomun.png", height="30px"),
+                            style={"color": "black"},
+                            className = "d-flex align-items-center justify-content-center"
                         ),
-                        href="/", 
-                        style={"text-decoration": "none"}
+                        justify = "center"
                     )
                 ),
-                className = "pb-4 px-3 pt-4"
+                className = "pb-4 pt-4"
             ),
             # Mapa
             dbc.Row(
@@ -551,7 +547,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pt-2 pb-5 px-4"
+                className = "pt-2 pb-5 px-2"
             ),
             # Tabla
             dbc.Row(
@@ -574,7 +570,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pb-5 px-4"
+                className = "pb-5 px-2"
             ),
             # Scatter Plot
             dbc.Row(
@@ -589,7 +585,7 @@ layout = html.Div([
                         )            
                     )
                 ),
-                className = "pb-5 px-4"
+                className = "pb-5 px-2"
             ),
             # NavBar
             dbc.Row([
@@ -602,7 +598,7 @@ layout = html.Div([
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "28px",
+                                "font-size": "26px",
                                 "cursor": "pointer",
                             }
                         ),
@@ -642,7 +638,7 @@ layout = html.Div([
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "28px",
+                                "font-size": "26px",
                                 "cursor": "pointer",
                             }
                         ),
@@ -679,7 +675,7 @@ layout = html.Div([
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "28px",
+                                "font-size": "26px",
                                 "cursor": "pointer",
                             }
                         ),
@@ -708,24 +704,12 @@ layout = html.Div([
                     className = "d-flex align-items-center justify-content-center"
                 )
             ],  
-                className = "pb-3 px-5 pt-3 position-fixed w-100",
-                style = {"bottom": "0", "background-color": "rgba(252, 251, 250, 0.95)"}
+                className = "pb-3 pt-3 position-fixed w-100",
+                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.9)", "z-index": "9999"}
             )
         ]),
-        className = "d-lg-none"
+        className = "m-0 d-lg-none"
     )
-
-
-
-
-
-
-
-
-
-
-
-
 
 ])
 
