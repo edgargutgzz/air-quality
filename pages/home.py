@@ -680,8 +680,7 @@ layout = html.Div([
                                             dbc.Tooltip(
                                                 "Solo una fuente de datos disponible por el momento.",
                                                 target="fuente-tooltip-target-m",
-                                                placement = "top",
-                                                #style = {"z-index": "9998"}
+                                                placement = "top"
                                             )
                                         ],
                                         id="fuente-tooltip-target-m",
@@ -710,8 +709,7 @@ layout = html.Div([
                                             dbc.Tooltip(
                                                 "Solo un indicador disponible por el momento.",
                                                 target="indicador-tooltip-target",
-                                                placement = "top",
-                                                #style = {"z-index": "9999"}
+                                                placement = "top"
                                             )
                                         ],
                                         id="indicador-tooltip-target",
@@ -741,7 +739,6 @@ layout = html.Div([
                                                 "Solo una opción disponible por el momento.",
                                                 target="municipio-tooltip-target",
                                                 placement = "top",
-                                                #style = {"z-index": "9997"}
                                             )
                                         ],
                                         id="municipio-tooltip-target",
@@ -785,7 +782,6 @@ layout = html.Div([
                                                 "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
                                                 target="fecha-tooltip-target",
                                                 placement = "top",
-                                                #style = {"z-index": "9996"}
                                             )
                                         ],
                                         id="fecha-tooltip-target",
