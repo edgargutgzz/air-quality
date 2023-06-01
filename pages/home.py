@@ -459,7 +459,7 @@ layout = html.Div([
                             ),
                             dbc.ModalBody(
                                 html.P(
-                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados en formato CSV que puedes abrir " 
+                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados, en formato CSV que puedes abrir " 
                                     "en varias plataformas, incluyendo Excel."
                                 )
                             ),
@@ -833,7 +833,7 @@ layout = html.Div([
                             ),
                             dbc.ModalBody(
                                 html.P(
-                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados en formato CSV que puedes abrir " 
+                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados, en formato CSV que puedes abrir " 
                                     "en varias plataformas, incluyendo Excel."
                                 )
                             ),
