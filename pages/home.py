@@ -456,7 +456,7 @@ layout = html.Div([
             dbc.Row(
                 dbc.Col(
                     dbc.Alert(
-                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey de acuerdo a los filtros seleccionados.",
+                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey.",
                         color = "primary",
                         dismissable = True,
                         duration = 10000
@@ -536,7 +536,7 @@ layout = html.Div([
             dbc.Row(
                 dbc.Col(
                     dbc.Alert(
-                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey de acuerdo a los filtros seleccionados.",
+                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey.",
                         color = "primary",
                         dismissable = True,
                         duration = 10000
@@ -556,7 +556,7 @@ layout = html.Div([
                         justify = "center"
                     )
                 ),
-                className = "pb-4 pt-4"
+                className = "pb-4 pt-2"
             ),
             # Mapa
             dbc.Row(
@@ -815,7 +815,7 @@ layout = html.Div([
                 )
             ],  
                 className = "pb-2 pt-2 position-fixed w-100",
-                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.8)", "z-index": "9998"}
+                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.9)", "z-index": "9998"}
             )
         ]),
         className = "m-0 d-xl-none"
