@@ -404,7 +404,7 @@ layout = html.Div([
                             outline = True,
                             id = "open_conocemas",
                             n_clicks = 0,
-                            style={'border-color': '#CCCCCC', "font-size": "14px", "color": "black"}
+                            style={'border-color': '#CCCCCC', "font-size": "14px"}
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
@@ -451,7 +451,7 @@ layout = html.Div([
                             id="open_descargar", 
                             color="secondary",
                             outline=True,
-                            style={'border-color': '#CCCCCC', "font-size": "14px", "color": "black"}
+                            style={'border-color': '#CCCCCC', "font-size": "14px"}
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
