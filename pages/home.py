@@ -633,7 +633,7 @@ layout = html.Div([
                     html.Div([
                         html.Button(
                             "⬇️", 
-                            id="open",
+                            id="open_descargar_m",
                             n_clicks=0,
                             style={
                                 "background": "none",
@@ -643,24 +643,27 @@ layout = html.Div([
                             }
                         ),
                         dbc.Modal([
-                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
-                            dbc.ModalBody([
-                                html.P([
-                                    "Descarga los datos "
-                                    "sensores de ",
-                                    html.A("Purple Air",
-                                           href="https://www2.purpleair.com/",
-                                           target="_blank",
-                                           style={"text-decoration": "none"}),
-                                    " en el área metropolitana de Monterrey."
-                                ]),
+                            dbc.ModalHeader(
+                                dbc.ModalTitle("Descarga los datos")
+                            ),
+                            dbc.ModalBody(
                                 html.P(
-                                    "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
-                                    "nos puedes enviar un correo a hola@datacomun.org"
+                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados en formato CSV que puedes abrir " 
+                                    "en varias plataformas, incluyendo Excel."
                                 )
+                            ),
+                            dbc.ModalFooter([
+                                dbc.Button(
+                                    "⬇️ Descargar",
+                                    id="boton_descargar_m", 
+                                    color="secondary",
+                                    outline=True,
+                                    style={'border-color': '#CCCCCC'}
+                                ),
+                                dcc.Download(id = "datos_m")
                             ])
                         ],
-                        id = "modal",
+                        id = "modal_descargar_m",
                         is_open = False
                         )
                     ]),
@@ -704,7 +707,7 @@ layout = html.Div([
                     className = "d-flex align-items-center justify-content-center"
                 )
             ],  
-                className = "pb-1 pt-1 position-fixed w-100",
+                className = "pb-2 pt-2 position-fixed w-100",
                 style = {"bottom": "0", "background-color": "rgba(255,255,255,0.9)", "z-index": "9999"}
             )
         ]),

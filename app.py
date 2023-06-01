@@ -94,8 +94,8 @@ app.callback(
 )(conocemas)
 
 #----------
-# Descargar
-def conocemas(n, is_open):
+# Descargar - Desktop
+def descargar(n, is_open):
     if n:
         return not is_open
     return is_open
@@ -104,18 +104,45 @@ app.callback(
     Output("modal_descargar", "is_open"),
     [Input("open_descargar", "n_clicks")],
     [State("modal_descargar", "is_open")],
-)(conocemas)
+)(descargar)
+
+# Descargar - Mobile
+def descargar_m(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+app.callback(
+    Output("modal_descargar_m", "is_open"),
+    [Input("open_descargar_m", "n_clicks")],
+    [State("modal_descargar_m", "is_open")],
+)(descargar_m)
 
 #----------
-# Download button
-def descargar(n_clicks):
+# Download button - Desktop
+def descargar_modal(n_clicks):
     return dcc.send_data_frame(dataframe.to_csv, "calidadaire.csv", index = False)
 
 app.callback(
     Output("datos", "data"),
     Input("boton_descargar", "n_clicks"),
     prevent_initial_call=True,
-)(descargar)
+)(descargar_modal)
+
+# Download button - Mobile
+def descargar_modal_m(n_clicks):
+    return dcc.send_data_frame(dataframe.to_csv, "calidadaire.csv", index = False)
+
+app.callback(
+    Output("datos_m", "data"),
+    Input("boton_descargar_m", "n_clicks"),
+    prevent_initial_call=True,
+)(descargar_modal_m)
+
+
+
+
+
 
 #----------
 
