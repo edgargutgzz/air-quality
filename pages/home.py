@@ -42,53 +42,6 @@ dataframe.sort_values(by='avg_pm25', ascending=False, inplace=True)
 conn.close()
 
 #----------
-# Mapa
-
-# Upload data.
-sensors_df = pd.read_csv("assets/sensores.csv")
-
-# Mapbox token
-token = os.environ['DB_PWD_TER']
-
-# Convert your dataframe into the Graph Objects format
-sensors_go = go.Figure(data=go.Scattermapbox(
-    lat=sensors_df["lat"],
-    lon=sensors_df["lon"],
-    customdata=np.stack((sensors_df["nombre"], sensors_df["municipio"]), axis=-1),
-    mode='markers',
-    marker=dict(size=14, opacity = .8),
-    hovertemplate="Sensor: %{customdata[0]}<br>Municipio: %{customdata[1]}",
-    name="Sensores de Purple Air   ",
-
-))
-
-# Update layout
-sensors_go.update_layout(
-    mapbox=dict(
-        accesstoken=token,
-        style="light",
-        zoom=10,
-        center=dict(lat=25.685387622008598, lon=-100.31385813323436)
-    ),
-    height=500,
-    margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
-    modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset", "resetscale", "resetview"]),
-    showlegend=True,
-    legend=dict(
-        x=.98,
-        y=.98,
-        traceorder="normal",
-        font=dict(
-            family="sans-serif",
-            size=14,
-            color="black"
-        ),
-        xanchor='right', 
-        yanchor='top' 
-    )
-)
-
-#----------
 # Tabla
 
 columnDefs = [
@@ -120,8 +73,8 @@ dataframe['color_label'] = dataframe['avg_pm25'].apply(assign_color_label)
 scatter_dataframe = dataframe.copy()
 scatter_dataframe.sort_values(by='municipio', ascending=False, inplace=True)
 
-# Define the assign_color_label function
-def assign_color_label(value):
+# Add Calidad del Aire column
+def calidad_aire(value):
     if value <= 25:
         return "Buena"
     elif 26 <= value <= 45:
@@ -133,8 +86,7 @@ def assign_color_label(value):
     else:
         return "Extremadamente Mala"
 
-# Assign color labels
-scatter_dataframe['Calidad del Aire'] = scatter_dataframe['avg_pm25'].apply(assign_color_label)
+scatter_dataframe['calidad_aire'] = scatter_dataframe['avg_pm25'].apply(calidad_aire)
 
 # Colors with transparency
 color_map = {
@@ -156,7 +108,7 @@ scatter_fig = px.scatter(
     y='Municipio',
     title=None,
     hover_name='nombre',
-    custom_data=["nombre", "Calidad del Aire"], 
+    custom_data=["nombre", "calidad_aire"], 
 )
 
 scatter_fig.update_traces(
@@ -173,7 +125,7 @@ scatter_fig.update_traces(
             width=1,  
             color='white' 
         ),
-        color=scatter_dataframe['Calidad del Aire'].map(color_map)  
+        color=scatter_dataframe['calidad_aire'].map(color_map)  
     )
 )
 
@@ -219,6 +171,67 @@ scatter_fig.update_layout(
             font=dict(size=14),
         )
     ]
+)
+
+#----------
+# Mapa
+
+# Upload data.
+sensors_df = pd.read_csv("assets/sensores.csv")
+
+# Merge the dataframes on 'sensor_id'
+merged_df = sensors_df.merge(scatter_dataframe[['sensor_id', 'PM2.5', 'calidad_aire']], on='sensor_id', how='left')
+
+# Mapbox token
+token = os.environ['DB_PWD_TER']
+
+# Create a separate trace for each "Calidad del Aire" category
+traces = []
+for calidad in merged_df['calidad_aire'].unique():
+    df_sub = merged_df[merged_df['calidad_aire'] == calidad]
+    traces.append(
+        go.Scattermapbox(
+            lat=df_sub["lat"],
+            lon=df_sub["lon"],
+            customdata=np.stack((df_sub["nombre"], df_sub["municipio"], df_sub["PM2.5"]), axis=-1),
+            mode='markers',
+            marker=dict(
+                size=14,
+                opacity = .8,
+                color=color_map[calidad]
+            ),
+            hovertemplate="Sensor: %{customdata[0]}<br>Municipio: %{customdata[1]}<br>PM2.5: %{customdata[2]}",
+            name=calidad
+        )
+    )
+
+# Convert your dataframe into the Graph Objects format
+sensors_go = go.Figure(data=traces)
+
+# Update layout
+sensors_go.update_layout(
+    mapbox=dict(
+        accesstoken=token,
+        style="light",
+        zoom=9,
+        center=dict(lat=25.685387622008598, lon=-100.31385813323436)
+    ),
+    height=500,
+    margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
+    modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset", "resetscale", "resetview"]),
+    showlegend=True,
+    legend=dict(
+        x=.98,
+        y=.98,
+        traceorder="normal",
+        font=dict(
+            family="sans-serif",
+            size=14,
+            color="black"
+        ),
+        xanchor='right', 
+        yanchor='top' 
+    )
 )
 
 #----------
@@ -519,6 +532,18 @@ layout = html.Div([
     # Sidebar y Visualizaciones - Mobile
     dbc.Row(
         dbc.Col([
+            # Texto introductorio
+            dbc.Row(
+                dbc.Col(
+                    dbc.Alert(
+                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey de acuerdo a los filtros seleccionados.",
+                        color = "primary",
+                        dismissable = True,
+                        duration = 10000
+                    )
+                ),
+                className = "pt-4"
+            ),
             # Data Comun
             dbc.Row(
                 dbc.Col(
