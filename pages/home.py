@@ -692,18 +692,7 @@ layout = html.Div([
                             id = "offcanvas",
                             is_open = False,
                             placement = "start",
-                            style = {"z-index": "9999"},
-                            title = html.Div(
-                                dbc.Row([
-                                    dbc.Col([
-                                        html.Img(src="../assets/logo_datacomun.png", height="24px")
-                                    ],
-                                        className = "px-4"
-                                    )
-                                ],
-                                    className = "px-1"
-                                )
-                            )
+                            style = {"z-index": "9999"}
                         )
                     ]),
                     className = "d-flex align-items-center justify-content-center"
