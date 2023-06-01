@@ -262,7 +262,18 @@ layout = html.Div([
             # Fuente de datos
             dbc.Row(
                 dbc.Col([
-                    html.P("🎛️ Fuente de datos", style={"font-weight": "bold"}),
+                    html.P(
+                        [
+                            "🎛️ Fuente de datos",
+                            dbc.Tooltip(
+                                "Solo una fuente de datos disponible por el momento.",
+                                target="fuente-tooltip-target",
+                                placement = "top"
+                            )
+                        ],
+                        id="fuente-tooltip-target",
+                        style={"font-weight": "bold"}
+                    ),
                     dcc.Dropdown(
                         id='municipio-dropdown-d',
                         options=[
@@ -279,7 +290,18 @@ layout = html.Div([
             # Indicador
             dbc.Row(
                 dbc.Col([
-                    html.P("📊 Indicador", style={"font-weight": "bold"}),
+                    html.P(
+                        [
+                            "📊 Indicador",
+                            dbc.Tooltip(
+                                "Solo un indicador disponible por el momento.",
+                                target="indicador-tooltip-target",
+                                placement = "top"
+                            )
+                        ],
+                        id="indicador-tooltip-target",
+                        style={"font-weight": "bold"}
+                    ),
                     dcc.Dropdown(
                         id='mes-dropdown-d',
                         options=[
@@ -297,7 +319,18 @@ layout = html.Div([
             # Municipio
             dbc.Row(
                 dbc.Col([
-                    html.P("📍 Municipio", style={"font-weight": "bold"}),
+                    html.P(
+                        [
+                            "📍 Municipio",
+                            dbc.Tooltip(
+                                "Solo una opción disponible por el momento.",
+                                target="municipio-tooltip-target",
+                                placement = "top"
+                            )
+                        ],
+                        id="municipio-tooltip-target",
+                        style={"font-weight": "bold"}
+                    ),
                     dcc.Dropdown(
                         id='mes-dropdown-d',
                         options=[
@@ -329,7 +362,18 @@ layout = html.Div([
             # Fecha
             dbc.Row(
                 dbc.Col([
-                    html.P("📅 Fecha", style={"font-weight": "bold"}),
+                    html.P(
+                        [
+                            "📅 Fecha",
+                            dbc.Tooltip(
+                                "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
+                                target="fecha-tooltip-target",
+                                placement = "top"
+                            )
+                        ],
+                        id="fecha-tooltip-target",
+                        style={"font-weight": "bold"}
+                    ),
                     dcc.DatePickerRange(
                         id='date-picker-range',
                         start_date_placeholder_text="Start Period",
@@ -456,7 +500,7 @@ layout = html.Div([
             dbc.Row(
                 dbc.Col(
                     dbc.Alert(
-                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey.",
+                        "🏭 Explora los datos de calidad del aire sobre el área metropolitana de Monterrey.",
                         color = "primary",
                         dismissable = True,
                         duration = 10000
@@ -536,7 +580,7 @@ layout = html.Div([
             dbc.Row(
                 dbc.Col(
                     dbc.Alert(
-                        "🏭 Datos de calidad del aire del área metropolitana de Monterrey.",
+                        "🏭 Explora los datos de calidad del aire sobre el área metropolitana de Monterrey.",
                         color = "primary",
                         dismissable = True,
                         duration = 10000
@@ -630,7 +674,19 @@ layout = html.Div([
                             # Fuente de datos
                             dbc.Row(
                                 dbc.Col([
-                                    html.P("🎛️ Fuente de datos", style={"font-weight": "bold"}),
+                                    html.P(
+                                        [
+                                            "🎛️ Fuente de datos",
+                                            dbc.Tooltip(
+                                                "Solo una fuente de datos disponible por el momento.",
+                                                target="fuente-tooltip-target-m",
+                                                placement = "top",
+                                                #style = {"z-index": "9998"}
+                                            )
+                                        ],
+                                        id="fuente-tooltip-target-m",
+                                        style={"font-weight": "bold"}
+                                    ),
                                     dcc.Dropdown(
                                         id='municipio-dropdown-d',
                                         options=[
@@ -648,7 +704,19 @@ layout = html.Div([
                             # Indicador
                             dbc.Row(
                                 dbc.Col([
-                                    html.P("📊 Indicador", style={"font-weight": "bold"}),
+                                    html.P(
+                                        [
+                                            "📊 Indicador",
+                                            dbc.Tooltip(
+                                                "Solo un indicador disponible por el momento.",
+                                                target="indicador-tooltip-target",
+                                                placement = "top",
+                                                #style = {"z-index": "9999"}
+                                            )
+                                        ],
+                                        id="indicador-tooltip-target",
+                                        style={"font-weight": "bold"}
+                                    ),
                                     dcc.Dropdown(
                                         id='mes-dropdown-d',
                                         options=[
@@ -666,7 +734,19 @@ layout = html.Div([
                             # Municipio
                             dbc.Row(
                                 dbc.Col([
-                                    html.P("📍 Municipio", style={"font-weight": "bold"}),
+                                    html.P(
+                                        [
+                                            "📍 Municipio",
+                                            dbc.Tooltip(
+                                                "Solo una opción disponible por el momento.",
+                                                target="municipio-tooltip-target",
+                                                placement = "top",
+                                                #style = {"z-index": "9997"}
+                                            )
+                                        ],
+                                        id="municipio-tooltip-target",
+                                        style={"font-weight": "bold"}
+                                    ),
                                     dcc.Dropdown(
                                         id='mes-dropdown-d',
                                         options=[
@@ -698,7 +778,19 @@ layout = html.Div([
                             # Fecha
                             dbc.Row(
                                 dbc.Col([
-                                    html.P("📅 Fecha", style={"font-weight": "bold"}),
+                                    html.P(
+                                        [
+                                            "📅 Fecha",
+                                            dbc.Tooltip(
+                                                "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
+                                                target="fecha-tooltip-target",
+                                                placement = "top",
+                                                #style = {"z-index": "9996"}
+                                            )
+                                        ],
+                                        id="fecha-tooltip-target",
+                                        style={"font-weight": "bold"}
+                                    ),
                                     dcc.DatePickerRange(
                                         id='date-picker-range',
                                         start_date_placeholder_text="Start Period",
