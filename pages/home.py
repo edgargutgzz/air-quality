@@ -341,12 +341,12 @@ layout = html.Div([
                 dbc.Col(
                     html.Div([
                         dbc.Button(
-                            "ℹ️ Conoce más", 
+                            "ℹ️ Conoce más",
                             color = "secondary",
                             outline = True,
                             id = "open_conocemas",
                             n_clicks = 0,
-                            style={'border-color': '#CCCCCC'}
+                            style={'border-color': '#CCCCCC', "font-size": "14px"}
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
@@ -384,7 +384,7 @@ layout = html.Div([
                         is_open = False
                         )
                     ]),
-                    className = "pb-4 pt-2"
+                    className = "pb-4 pt-2 d-flex align-items-center justify-content-center"
                 ),
                 dbc.Col(
                     html.Div([
@@ -393,7 +393,7 @@ layout = html.Div([
                             id="open_descargar", 
                             color="secondary",
                             outline=True,
-                            style={'border-color': '#CCCCCC'}
+                            style={'border-color': '#CCCCCC', "font-size": "14px"}
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
@@ -420,11 +420,9 @@ layout = html.Div([
                         is_open = False
                         )
                     ]),
-                    className = "pb-4 pt-2"
+                    className = "pb-4 pt-2 d-flex align-items-center justify-content-center"
                 )
-            ],
-            className = "px-3"
-            )
+            ])
         ],
         className='pt-4 d-flex flex-column',
         width=3,
@@ -514,7 +512,7 @@ layout = html.Div([
         )
 
     ],
-    className="m-0 d-none d-lg-block"
+    className="m-0 d-none d-xl-block"
     ),
 
     # Sidebar y Visualizaciones - Mobile
@@ -725,7 +723,7 @@ layout = html.Div([
                 style = {"bottom": "0", "background-color": "rgba(255,255,255,0.8)", "z-index": "9999"}
             )
         ]),
-        className = "m-0 d-lg-none"
+        className = "m-0 d-xl-none"
     )
 
 ])
