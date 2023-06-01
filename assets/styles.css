@@ -27,3 +27,9 @@
 .ag-header-cell-label::after {
     transition-delay: 0s !important;
 }
+
+/* Smaller font for calendar */
+.smaller-font .DateInput_input {
+    font-size: 18px;  /* adjust to the font size you want */
+    color: black;
+}

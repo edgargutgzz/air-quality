@@ -75,8 +75,8 @@ sensors_go.update_layout(
     modebar=dict(remove=["zoom", "toimage", "pan", "select", "lasso", "zoomin", "zoomout", "autoscale", "reset", "resetscale", "resetview"]),
     showlegend=True,
     legend=dict(
-        x=.97,
-        y=.95,
+        x=.98,
+        y=.98,
         traceorder="normal",
         font=dict(
             family="sans-serif",
@@ -325,7 +325,8 @@ layout = html.Div([
                         end_date=date.today(),
                         min_date_allowed=datetime(2023, 5, 31),
                         max_date_allowed=datetime(2023, 5, 8),
-                        display_format="DD/MM/YYYY"
+                        display_format="DD/MM/YYYY",
+                        className = "smaller-font"
                     )
                 ]),
                 className = "pt-4 px-3"
@@ -346,7 +347,7 @@ layout = html.Div([
                             outline = True,
                             id = "open_conocemas",
                             n_clicks = 0,
-                            style={'border-color': '#CCCCCC', "font-size": "14px"}
+                            style={'border-color': '#CCCCCC', "font-size": "14px", "color": "black"}
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
@@ -393,7 +394,7 @@ layout = html.Div([
                             id="open_descargar", 
                             color="secondary",
                             outline=True,
-                            style={'border-color': '#CCCCCC', "font-size": "14px"}
+                            style={'border-color': '#CCCCCC', "font-size": "14px", "color": "black"}
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
@@ -591,7 +592,7 @@ layout = html.Div([
                     html.Div([
                         html.Button(
                             "🔍", 
-                            id="open",
+                            id="open_offcanvas",
                             n_clicks=0,
                             style={
                                 "background": "none",
@@ -600,29 +601,107 @@ layout = html.Div([
                                 "cursor": "pointer",
                             }
                         ),
-                        dbc.Modal([
-                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
-                            dbc.ModalBody([
-                                html.P([
-                                    "Filtra los datos "
-                                    "con mejor calidad de aire para todas y todos. Creemos que faltan más y mejores datos sobre el aire que "
-                                    "respiramos en la ciudad y esta herramienta es nuestra respuesta hacia ello. El sistema actual recolecta cada " 
-                                    "hora datos de los más de 100 "
-                                    "sensores de ",
-                                    html.A("Purple Air",
-                                           href="https://www2.purpleair.com/",
-                                           target="_blank",
-                                           style={"text-decoration": "none"}),
-                                    " en el área metropolitana de Monterrey."
+                        dbc.Offcanvas([
+                            # Fuente de datos
+                            dbc.Row(
+                                dbc.Col([
+                                    html.P("🎛️ Fuente de datos", style={"font-weight": "bold"}),
+                                    dcc.Dropdown(
+                                        id='municipio-dropdown-d',
+                                        options=[
+                                            {"label": "Sensores de Purple Air", "value": "Sensores de Purple Air"},
+                                            {"label": "Sensores del Estado de Nuevo León", "value": "Sensores del Estado de Nuevo León",
+                                            "disabled": True}
+                                        ],
+                                        value='Sensores de Purple Air',
+                                        clearable=False,
+                                        style={'backgroundColor': '#FFFFFF'}
+                                    )
                                 ]),
-                                html.P(
-                                    "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
-                                    "nos puedes enviar un correo a hola@datacomun.org"
-                                )
-                            ])
+                                className = "pt-4 px-3"
+                            ),
+                            # Indicador
+                            dbc.Row(
+                                dbc.Col([
+                                    html.P("📊 Indicador", style={"font-weight": "bold"}),
+                                    dcc.Dropdown(
+                                        id='mes-dropdown-d',
+                                        options=[
+                                            {"label": "PM2.5", "value": "PM2.5"},
+                                            {"label": "PM10.0", "value": "PM10.0", "disabled": True},
+                                            {"label": "Temperatura", "value": "Temperatura", "disabled": True}
+                                        ],
+                                        value='PM2.5',
+                                        clearable=False,
+                                        style={'backgroundColor': '#FFFFFF'}
+                                    )
+                                ]),
+                                className = "pt-4 px-3"
+                            ),
+                            # Municipio
+                            dbc.Row(
+                                dbc.Col([
+                                    html.P("📍 Municipio", style={"font-weight": "bold"}),
+                                    dcc.Dropdown(
+                                        id='mes-dropdown-d',
+                                        options=[
+                                            {"label": "Todos", "value": "Todos"},
+                                            {"label": "Abasolo", "value": "Abasolo", "disabled": True},
+                                            {"label": "El Carmen", "value": "El Carmen", "disabled": True},
+                                            {"label": "Escobedo", "value": "Escobedo", "disabled": True},
+                                            {"label": "García", "value": "García", "disabled": True},
+                                            {"label": "Juárez", "value": "Juárez", "disabled": True},
+                                            {"label": "Allende", "value": "Allende", "disabled": True},
+                                            {"label": "Apodaca", "value": "Apodaca", "disabled": True},
+                                            {"label": "Cadereyta Jimenez", "value": "Cadereyta Jimenez", "disabled": True},
+                                            {"label": "Cienega de Flores", "value": "Cienega de Flores", "disabled": True},
+                                            {"label": "Guadalupe", "value": "Guadalupe", "disabled": True},
+                                            {"label": "Monterrey", "value": "Monterrey", "disabled": True},
+                                            {"label": "Salinas Victoria", "value": "Salinas Victoria", "disabled": True},
+                                            {"label": "San Nicolás de los Garza", "value": "San Nicolás de los Garza", "disabled": True},
+                                            {"label": "San Pedro Garza García", "value": "San Pedro Garza García", "disabled": True},
+                                            {"label": "Santa Catarina", "value": "Santa Catarina", "disabled": True},
+                                            {"label": "Santiago", "value": "Santiago", "disabled": True}
+                                        ],
+                                        value='Todos',
+                                        clearable=False,
+                                        style={'backgroundColor': '#FFFFFF'}
+                                    )
+                                ]),
+                                className = "pt-4 px-3"
+                            ),
+                            # Fecha
+                            dbc.Row(
+                                dbc.Col([
+                                    html.P("📅 Fecha", style={"font-weight": "bold"}),
+                                    dcc.DatePickerRange(
+                                        id='date-picker-range',
+                                        start_date_placeholder_text="Start Period",
+                                        end_date_placeholder_text="End Period",
+                                        start_date=datetime(2023, 5, 8),
+                                        end_date=date.today(),
+                                        min_date_allowed=datetime(2023, 5, 31),
+                                        max_date_allowed=datetime(2023, 5, 8),
+                                        display_format="DD/MM/YYYY",
+                                        className = "smaller-font"
+                                    )
+                                ]),
+                                className = "pt-4 px-3"
+                            )
                         ],
-                        id = "modal",
-                        is_open = False
+                            id = "offcanvas",
+                            is_open = False,
+                            placement = "start",
+                            style = {"z-index": "9999"},
+                            title = html.Div(
+                                dbc.Row(
+                                    dbc.Col(
+                                        html.Img(src="../assets/logo_datacomun.png", height="24px"),
+                                        className = "px-4"
+                                    ),
+                                    className = "px-1"
+                                )
+                            )
                         )
                     ]),
                     className = "d-flex align-items-center justify-content-center"
@@ -720,7 +799,7 @@ layout = html.Div([
                 )
             ],  
                 className = "pb-2 pt-2 position-fixed w-100",
-                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.8)", "z-index": "9999"}
+                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.8)", "z-index": "9998"}
             )
         ]),
         className = "m-0 d-xl-none"

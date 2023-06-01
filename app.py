@@ -152,6 +152,25 @@ app.callback(
 )(descargar_modal_m)
 
 #----------
+# Offcanvas - Mobile
+def toggle_offcanvas(n1, is_open):
+    if n1:
+        return not is_open
+    return is_open
 
+app.callback(
+    Output("offcanvas", "is_open"),
+    Input("open_offcanvas", "n_clicks"),
+    [State("offcanvas", "is_open")],
+)(toggle_offcanvas)
+
+
+
+
+
+
+
+
+#----------
 if __name__ == '__main__':
     app.run_server(debug=True)
