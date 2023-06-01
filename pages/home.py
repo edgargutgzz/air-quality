@@ -673,7 +673,7 @@ layout = html.Div([
                     html.Div([
                         html.Button(
                             "ℹ️", 
-                            id="open",
+                            id="open_conocemas_m",
                             n_clicks=0,
                             style={
                                 "background": "none",
@@ -683,24 +683,38 @@ layout = html.Div([
                             }
                         ),
                         dbc.Modal([
-                            dbc.ModalHeader(dbc.ModalTitle("Data Comun")),
+                            dbc.ModalHeader(
+                                dbc.ModalTitle(
+                                    dbc.Col(
+                                        html.Img(src="../assets/logo_datacomun.png", height="30px"),
+                                        style={"color": "black"}
+                                    )
+                                )
+                            ),
                             dbc.ModalBody([
                                 html.P([
-                                    "Conoce mas "
-                                    "sensores de ",
+                                    "Desarrollamos esta plataforma para fortalecer a la ciudadanía en la lucha por crear una ciudad "
+                                    "con mejor calidad de aire para todas y todos. El sistema actual recolecta cada " 
+                                    "hora datos de los más de 100 sensores de ",
                                     html.A("Purple Air",
                                            href="https://www2.purpleair.com/",
                                            target="_blank",
                                            style={"text-decoration": "none"}),
                                     " en el área metropolitana de Monterrey."
                                 ]),
-                                html.P(
+                                html.P([
                                     "Si tienes dudas sobre el proyecto o te gustaría colaborar para fortalecer la plataforma "
-                                    "nos puedes enviar un correo a hola@datacomun.org"
-                                )
+                                    "nos puedes enviar un correo a hola@datacomun.org o visitar nuestra página en ",
+                                    html.A(
+                                        "datacomun.org",
+                                        href="https://www.datacomun.org/",
+                                        target="_blank",
+                                        style={"text-decoration": "none"}
+                                    )
+                                ])
                             ])
                         ],
-                        id = "modal",
+                        id = "modal_conocemas_m",
                         is_open = False
                         )
                     ]),
@@ -708,7 +722,7 @@ layout = html.Div([
                 )
             ],  
                 className = "pb-2 pt-2 position-fixed w-100",
-                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.9)", "z-index": "9999"}
+                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.8)", "z-index": "9999"}
             )
         ]),
         className = "m-0 d-lg-none"

@@ -81,7 +81,7 @@ dataframe.rename(columns={"nombre": "sensor", "date": "fecha"}, inplace=True)
 conn.close()
 
 #----------
-# Conoce más
+# Conoce más - Desktop
 def conocemas(n, is_open):
     if n:
         return not is_open
@@ -92,6 +92,18 @@ app.callback(
     [Input("open_conocemas", "n_clicks")],
     [State("modal_conocemas", "is_open")],
 )(conocemas)
+
+# Conoce más - Mobile
+def conocemas_m(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+app.callback(
+    Output("modal_conocemas_m", "is_open"),
+    [Input("open_conocemas_m", "n_clicks")],
+    [State("modal_conocemas_m", "is_open")],
+)(conocemas_m)
 
 #----------
 # Descargar - Desktop
@@ -138,11 +150,6 @@ app.callback(
     Input("boton_descargar_m", "n_clicks"),
     prevent_initial_call=True,
 )(descargar_modal_m)
-
-
-
-
-
 
 #----------
 
