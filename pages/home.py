@@ -246,15 +246,11 @@ layout = html.Div([
             # Data Comun
             dbc.Row(
                 dbc.Col(
-                    html.A(
-                        dbc.Row(
-                            dbc.Col(
-                                html.Img(src="../assets/logo_datacomun.png", height="34px"),
-                                style={"color": "black"}
-                            )
-                        ),
-                        href="/", 
-                        style={"text-decoration": "none"}
+                    dbc.Row(
+                        dbc.Col(
+                            html.Img(src="../assets/logo_datacomun.png", height="34px"),
+                            style={"color": "black"}
+                        )
                     )
                 ),
                 className = "pb-4 px-3 pt-2"
