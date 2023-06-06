@@ -10,6 +10,7 @@ import plotly.express as px
 from datetime import datetime, date
 import plotly.graph_objects as go
 import numpy as np
+import pytz
 
 #----------
 dash.register_page(__name__, path="/")
@@ -234,6 +235,14 @@ sensors_go.update_layout(
     )
 )
 
+#----------
+# Calendar date
+
+# Create a timezone object for Mexico City
+mexico_tz = pytz.timezone('America/Mexico_City')
+
+# Get the current date in Mexico City timezone
+now_mexico = datetime.now(mexico_tz)
 
 #----------
 # Page layout
@@ -376,7 +385,7 @@ layout = html.Div([
                         start_date_placeholder_text="Start Period",
                         end_date_placeholder_text="End Period",
                         start_date=datetime(2023, 5, 8),
-                        end_date=date.today(),
+                        end_date= now_mexico,
                         min_date_allowed=datetime(2023, 5, 31),
                         max_date_allowed=datetime(2023, 5, 8),
                         display_format="DD/MM/YYYY",
@@ -792,7 +801,7 @@ layout = html.Div([
                                         start_date_placeholder_text="Start Period",
                                         end_date_placeholder_text="End Period",
                                         start_date=datetime(2023, 5, 8),
-                                        end_date=date.today(),
+                                        end_date= now_mexico,
                                         min_date_allowed=datetime(2023, 5, 31),
                                         max_date_allowed=datetime(2023, 5, 8),
                                         display_format="DD/MM/YYYY",
