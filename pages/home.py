@@ -11,7 +11,7 @@ from datetime import datetime, date
 import plotly.graph_objects as go
 import numpy as np
 
-
+#----------
 dash.register_page(__name__, path="/")
 
 #----------
@@ -234,6 +234,7 @@ sensors_go.update_layout(
     )
 )
 
+
 #----------
 # Page layout
 layout = html.Div([
@@ -360,7 +361,7 @@ layout = html.Div([
                 dbc.Col([
                     html.P(
                         [
-                            "📅 Fecha",
+                            "🗓️ Fecha",
                             dbc.Tooltip(
                                 "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
                                 target="fecha-tooltip-target",
@@ -392,6 +393,7 @@ layout = html.Div([
             ),
             # Conoce más y descargar
             dbc.Row([
+                # Conoce más
                 dbc.Col(
                     html.Div([
                         dbc.Button(
@@ -440,6 +442,7 @@ layout = html.Div([
                     ]),
                     className = "pb-4 pt-2 d-flex align-items-center justify-content-center"
                 ),
+                # Descargar
                 dbc.Col(
                     html.Div([
                         dbc.Button(
@@ -478,15 +481,15 @@ layout = html.Div([
                 )
             ])
         ],
-        className='pt-4 d-flex flex-column',
-        width=3,
-        style = {
-            "position": "fixed", 
-            "top": 0,
-            "height": "100vh",
-            "border-right": "1px solid #DBDBDB",
-            "overflow": "auto"
-        }
+            className='pt-4 d-flex flex-column',
+            width=3,
+            style = {
+                "position": "fixed", 
+                "top": 0,
+                "height": "100vh",
+                "border-right": "1px solid #DBDBDB",
+                "overflow": "auto"
+            }
         ),
 
         # Visualizaciones
@@ -566,7 +569,7 @@ layout = html.Div([
         )
 
     ],
-    className="m-0 d-none d-xl-block"
+        className="m-0 d-none d-xl-block"
     ),
 
     # Sidebar y Visualizaciones - Mobile
@@ -653,6 +656,7 @@ layout = html.Div([
             ),
             # NavBar
             dbc.Row([
+                # Filtros
                 dbc.Col(
                     html.Div([
                         html.Button(
@@ -773,7 +777,7 @@ layout = html.Div([
                                 dbc.Col([
                                     html.P(
                                         [
-                                            "📅 Fecha",
+                                            "🗓️ Fecha",
                                             dbc.Tooltip(
                                                 "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
                                                 target="fecha-tooltip-target",
@@ -806,6 +810,7 @@ layout = html.Div([
                     ]),
                     className = "d-flex align-items-center justify-content-center"
                 ),
+                # Descargar datos
                 dbc.Col(
                     html.Div([
                         html.Button(
@@ -846,6 +851,7 @@ layout = html.Div([
                     ]),
                     className = "d-flex align-items-center justify-content-center"
                 ),
+                # Conoce más
                 dbc.Col(
                     html.Div([
                         html.Button(

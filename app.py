@@ -5,18 +5,20 @@ import os
 import pandas as pd
 import psycopg2
 
-# Bootstrap
+#----------
+# Stylesheets
 external_stylesheets = [{'href': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css',
      'rel': 'stylesheet', 'integrity': 'sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi',
      'crossorigin': 'anonymous'}]
 
+#----------
 # Initialize app
 app = Dash(__name__, title= "Calidad del Aire - Data Comun",
            use_pages=True,
            external_stylesheets=external_stylesheets,
            )
 
-
+#----------
 # Google Analytics
 app.index_string = """<!DOCTYPE html>
 <html>
@@ -45,7 +47,7 @@ app.index_string = """<!DOCTYPE html>
     </body>
 </html>"""
 
-
+#----------
 server = app.server
 
 # Page layout
@@ -54,7 +56,8 @@ app.layout = html.Div(
 )
 
 #----------
-# Air Quality Data
+# Data
+
 # Connect to database.
 DATABASE_URL = os.environ.get('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
@@ -106,7 +109,7 @@ app.callback(
 )(conocemas_m)
 
 #----------
-# Descargar - Desktop
+# Botón descargar - Desktop
 def descargar(n, is_open):
     if n:
         return not is_open
@@ -131,7 +134,7 @@ app.callback(
 )(descargar_m)
 
 #----------
-# Download button - Desktop
+# Descargar datos - Desktop
 def descargar_modal(n_clicks):
     return dcc.send_data_frame(dataframe.to_csv, "calidadaire.csv", index = False)
 
@@ -141,7 +144,7 @@ app.callback(
     prevent_initial_call=True,
 )(descargar_modal)
 
-# Download button - Mobile
+# Descargar datos - Mobile
 def descargar_modal_m(n_clicks):
     return dcc.send_data_frame(dataframe.to_csv, "calidadaire.csv", index = False)
 
@@ -163,13 +166,6 @@ app.callback(
     Input("open_offcanvas", "n_clicks"),
     [State("offcanvas", "is_open")],
 )(toggle_offcanvas)
-
-
-
-
-
-
-
 
 #----------
 if __name__ == '__main__':
