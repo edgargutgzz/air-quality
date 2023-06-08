@@ -258,7 +258,7 @@ layout = html.Div([
                 dbc.Col(
                     dbc.Row(
                         dbc.Col(
-                            html.Img(src="../assets/logo_datacomun.png", height="34px"),
+                            html.Img(src="../assets/logo_datacomun.png", height="28px"),
                             style={"color": "black"}
                         )
                     )
