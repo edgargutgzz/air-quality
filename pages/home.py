@@ -248,13 +248,6 @@ now_mexico = datetime.now(mexico_tz)
 #----------
 # Page layout
 layout = html.Div([
-    # Loading spinner
-    # dcc.Loading(
-    #     id="loading-map",
-    #     type="default",
-    #     fullscreen = True,
-    #     color = "#9580BF",
-    #     children = [
 
     # Sidebar y Visualizaciones - Desktop
     dbc.Row([
@@ -395,18 +388,6 @@ layout = html.Div([
                     ],
                         style={'display': 'flex', 'align-items': 'center'}
                     ),
-                    # html.P(
-                    #     [
-                    #         "🗓️ Fecha",
-                    #         dbc.Tooltip(
-                    #             "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
-                    #             target="fecha-tooltip-target",
-                    #             placement = "top"
-                    #         )
-                    #     ],
-                    #     id="fecha-tooltip-target",
-                    #     style={"font-weight": "bold"}
-                    # ),
                     dcc.DatePickerRange(
                         id='date-picker-range',
                         start_date_placeholder_text="Start Period",
@@ -416,7 +397,7 @@ layout = html.Div([
                         min_date_allowed=datetime(2023, 5, 31),
                         max_date_allowed=datetime(2023, 5, 8),
                         display_format="DD/MM/YYYY",
-                        className = "pt-3 smaller-font",
+                        className = "pt-3 smaller-font"
                     )
                 ]),
                 className = "pt-4 px-3"
@@ -433,7 +414,7 @@ layout = html.Div([
                 dbc.Col(
                     html.Div([
                         dbc.Button(
-                            "ℹ️ Conoce más",
+                            "Conoce más",
                             color = "secondary",
                             outline = True,
                             id = "open_conocemas",
@@ -442,12 +423,7 @@ layout = html.Div([
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
-                                dbc.ModalTitle(
-                                    dbc.Col(
-                                        html.Img(src="../assets/logo_datacomun.png", height="30px"),
-                                        style={"color": "black"}
-                                    )
-                                )
+                                dbc.ModalTitle("Conoce más")
                             ),
                             dbc.ModalBody([
                                 html.P([
@@ -482,7 +458,7 @@ layout = html.Div([
                 dbc.Col(
                     html.Div([
                         dbc.Button(
-                            "⬇️ Descargar",
+                            html.Span("Descargar", style={"padding": "5px"}),
                             id="open_descargar", 
                             color="secondary",
                             outline=True,
@@ -500,7 +476,7 @@ layout = html.Div([
                             ),
                             dbc.ModalFooter([
                                 dbc.Button(
-                                    "⬇️ Descargar",
+                                    "Descargar",
                                     id="boton_descargar", 
                                     color="secondary",
                                     outline=True,
@@ -531,18 +507,6 @@ layout = html.Div([
         # Visualizaciones
         dbc.Col([
 
-            # Texto introductorio
-            dbc.Row(
-                dbc.Col(
-                    dbc.Alert(
-                        "🏭 Explora los datos de calidad del aire sobre el área metropolitana de Monterrey.",
-                        color = "primary",
-                        dismissable = True,
-                        duration = 10000
-                    )
-                ),
-                className = "pt-4"
-            ),
             # Mapa
             dbc.Row(
                 dbc.Col(
@@ -556,7 +520,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pt-2 pb-5"
+                className = "pt-4"
             ),
             # Tabla
             dbc.Row(
@@ -579,7 +543,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pb-5"
+                className = "pt-4"
             ),
             # Scatter Plot
             dbc.Row(
@@ -594,7 +558,7 @@ layout = html.Div([
                         )            
                     )
                 ),
-                className = "pb-5"
+                className = "pt-4 pb-4"
             )
         ],
         width=9,
@@ -946,7 +910,6 @@ layout = html.Div([
         ]),
         className = "m-0 d-xl-none"
     )
-    # ])
 
 ])
 
