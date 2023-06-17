@@ -333,7 +333,7 @@ layout = html.Div([
                     html.Div([
                         html.Img(src="assets/location.png", height="20px", style={'margin-right': '8px'}),
                         html.Span(
-                            "Zona Metropolitana", style = {"font-weight": "bold"}, id="municipio-tooltip-target"
+                            "Municipio", style = {"font-weight": "bold"}, id="municipio-tooltip-target"
                         ), 
                         dbc.Tooltip(
                             "Solo una opción disponible por el momento.",
@@ -346,7 +346,7 @@ layout = html.Div([
                     dcc.Dropdown(
                         id='mes-dropdown-d',
                         options=[
-                            {"label": "Todos", "value": "Todos"},
+                            {"label": "Zona Metropolitana", "value": "Zona Metropolitana"},
                             {"label": "🔒🔜 Abasolo", "value": "Abasolo", "disabled": True},
                             {"label": "🔒🔜 El Carmen", "value": "El Carmen", "disabled": True},
                             {"label": "🔒🔜 Escobedo", "value": "Escobedo", "disabled": True},
@@ -364,7 +364,7 @@ layout = html.Div([
                             {"label": "🔒🔜 Santa Catarina", "value": "Santa Catarina", "disabled": True},
                             {"label": "🔒🔜 Santiago", "value": "Santiago", "disabled": True}
                         ],
-                        value='Todos',
+                        value='Zona Metropolitana',
                         clearable=False,
                         style={'backgroundColor': '#FFFFFF'},
                         className = "pt-3"
@@ -575,31 +575,18 @@ layout = html.Div([
     # Sidebar y Visualizaciones - Mobile
     dbc.Row(
         dbc.Col([
-            # Texto introductorio
-            dbc.Row(
-                dbc.Col(
-                    dbc.Alert(
-                        "🏭 Explora los datos de calidad del aire sobre el área metropolitana de Monterrey.",
-                        color = "primary",
-                        dismissable = True,
-                        duration = 10000
-                    )
-                ),
-                className = "pt-4"
-            ),
-            # Data Comun
+            # Webbsite's logo
             dbc.Row(
                 dbc.Col(
                     dbc.Row(
                         dbc.Col(
                             html.Img(src="../assets/logo_datacomun.png", height="30px"),
-                            style={"color": "black"},
-                            className = "d-flex align-items-center justify-content-center"
-                        ),
-                        justify = "center"
+                            style={"color": "black"}
+                        )
                     )
                 ),
-                className = "pb-4 pt-2"
+                className = "pt-4 pb-4",
+                style={"text-align": "center"}
             ),
             # Mapa
             dbc.Row(
@@ -614,7 +601,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pt-2 pb-5"
+                className = "pt-2 pb-4"
             ),
             # Tabla
             dbc.Row(
@@ -637,7 +624,7 @@ layout = html.Div([
                         )
                     )
                 ),
-                className = "pb-5"
+                className = "pt-2 pb-4"
             ),
             # Scatter Plot
             dbc.Row(
@@ -652,7 +639,7 @@ layout = html.Div([
                         )            
                     )
                 ),
-                className = "pb-5"
+                className = "pt-2 pb-5"
             ),
             # NavBar
             dbc.Row([
@@ -660,13 +647,12 @@ layout = html.Div([
                 dbc.Col(
                     html.Div([
                         html.Button(
-                            "🔍", 
+                            html.Img(src="assets/filtro.png", height="26px"), 
                             id="open_offcanvas",
                             n_clicks=0,
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "26px",
                                 "cursor": "pointer",
                             }
                         ),
@@ -674,28 +660,30 @@ layout = html.Div([
                             # Fuente de datos
                             dbc.Row(
                                 dbc.Col([
-                                    html.P(
-                                        [
-                                            "🎛️ Fuente de datos",
-                                            dbc.Tooltip(
-                                                "Solo una fuente de datos disponible por el momento.",
-                                                target="fuente-tooltip-target-m",
-                                                placement = "top"
-                                            )
-                                        ],
-                                        id="fuente-tooltip-target-m",
-                                        style={"font-weight": "bold"}
+                                    html.Div([
+                                        html.Img(src="assets/sensor.png", height="22px", style={'margin-right': '6px'}),
+                                        html.Span(
+                                            "Fuente de Datos", style = {"font-weight": "bold"}, id="fuente-tooltip-target"
+                                        ), 
+                                        dbc.Tooltip(
+                                            "Solo una fuente de datos disponible por el momento.",
+                                            target="fuente-tooltip-target",
+                                            placement = "top"
+                                        )              
+                                    ],
+                                        style={'display': 'flex', 'align-items': 'center'}
                                     ),
                                     dcc.Dropdown(
                                         id='municipio-dropdown-d',
                                         options=[
                                             {"label": "Sensores de Purple Air", "value": "Sensores de Purple Air"},
-                                            {"label": "Sensores del Estado de Nuevo León", "value": "Sensores del Estado de Nuevo León",
+                                            {"label": "🔒🔜 Sensores del Estado de N.L.", "value": "Sensores del Estado de Nuevo León",
                                             "disabled": True}
                                         ],
                                         value='Sensores de Purple Air',
                                         clearable=False,
-                                        style={'backgroundColor': '#FFFFFF'}
+                                        style={'backgroundColor': '#FFFFFF'},
+                                        className = "pt-3"
                                     )
                                 ]),
                                 className = "pt-4 px-3"
@@ -703,28 +691,30 @@ layout = html.Div([
                             # Indicador
                             dbc.Row(
                                 dbc.Col([
-                                    html.P(
-                                        [
-                                            "📊 Indicador",
-                                            dbc.Tooltip(
-                                                "Solo un indicador disponible por el momento.",
-                                                target="indicador-tooltip-target",
-                                                placement = "top"
-                                            )
-                                        ],
-                                        id="indicador-tooltip-target",
-                                        style={"font-weight": "bold"}
+                                    html.Div([
+                                        html.Img(src="assets/indicador.png", height="20px", style={'margin-right': '8px'}),
+                                        html.Span(
+                                            "Indicador", style = {"font-weight": "bold"}, id="indicador-tooltip-target"
+                                        ), 
+                                        dbc.Tooltip(
+                                            "Solo un indicador disponible por el momento.",
+                                            target="indicador-tooltip-target",
+                                            placement = "top"
+                                        )              
+                                    ],
+                                        style={'display': 'flex', 'align-items': 'center'}
                                     ),
                                     dcc.Dropdown(
                                         id='mes-dropdown-d',
                                         options=[
                                             {"label": "PM2.5", "value": "PM2.5"},
-                                            {"label": "PM10.0", "value": "PM10.0", "disabled": True},
-                                            {"label": "Temperatura", "value": "Temperatura", "disabled": True}
+                                            {"label": "🔒🔜 PM10.0", "value": "PM10.0", "disabled": True},
+                                            {"label": "🔒🔜 Temperatura", "value": "Temperatura", "disabled": True}
                                         ],
                                         value='PM2.5',
                                         clearable=False,
-                                        style={'backgroundColor': '#FFFFFF'}
+                                        style={'backgroundColor': '#FFFFFF'},
+                                        className = "pt-3"
                                     )
                                 ]),
                                 className = "pt-4 px-3"
@@ -732,42 +722,44 @@ layout = html.Div([
                             # Municipio
                             dbc.Row(
                                 dbc.Col([
-                                    html.P(
-                                        [
-                                            "📍 Municipio",
-                                            dbc.Tooltip(
-                                                "Solo una opción disponible por el momento.",
-                                                target="municipio-tooltip-target",
-                                                placement = "top",
-                                            )
-                                        ],
-                                        id="municipio-tooltip-target",
-                                        style={"font-weight": "bold"}
+                                    html.Div([
+                                        html.Img(src="assets/location.png", height="20px", style={'margin-right': '8px'}),
+                                        html.Span(
+                                            "Municipio", style = {"font-weight": "bold"}, id="municipio-tooltip-target"
+                                        ), 
+                                        dbc.Tooltip(
+                                            "Solo una opción disponible por el momento.",
+                                            target="municipio-tooltip-target",
+                                            placement = "top"
+                                        )              
+                                    ],
+                                        style={'display': 'flex', 'align-items': 'center'}
                                     ),
                                     dcc.Dropdown(
-                                        id='mes-dropdown-d',
+                                        id='mes-dropdown-m',
                                         options=[
-                                            {"label": "Todos", "value": "Todos"},
-                                            {"label": "Abasolo", "value": "Abasolo", "disabled": True},
-                                            {"label": "El Carmen", "value": "El Carmen", "disabled": True},
-                                            {"label": "Escobedo", "value": "Escobedo", "disabled": True},
-                                            {"label": "García", "value": "García", "disabled": True},
-                                            {"label": "Juárez", "value": "Juárez", "disabled": True},
-                                            {"label": "Allende", "value": "Allende", "disabled": True},
-                                            {"label": "Apodaca", "value": "Apodaca", "disabled": True},
-                                            {"label": "Cadereyta Jimenez", "value": "Cadereyta Jimenez", "disabled": True},
-                                            {"label": "Cienega de Flores", "value": "Cienega de Flores", "disabled": True},
-                                            {"label": "Guadalupe", "value": "Guadalupe", "disabled": True},
-                                            {"label": "Monterrey", "value": "Monterrey", "disabled": True},
-                                            {"label": "Salinas Victoria", "value": "Salinas Victoria", "disabled": True},
-                                            {"label": "San Nicolás de los Garza", "value": "San Nicolás de los Garza", "disabled": True},
-                                            {"label": "San Pedro Garza García", "value": "San Pedro Garza García", "disabled": True},
-                                            {"label": "Santa Catarina", "value": "Santa Catarina", "disabled": True},
-                                            {"label": "Santiago", "value": "Santiago", "disabled": True}
+                                            {"label": "Zona Metropolitana", "value": "Zona Metropolitana"},
+                                            {"label": "🔒🔜 Abasolo", "value": "Abasolo", "disabled": True},
+                                            {"label": "🔒🔜 El Carmen", "value": "El Carmen", "disabled": True},
+                                            {"label": "🔒🔜 Escobedo", "value": "Escobedo", "disabled": True},
+                                            {"label": "🔒🔜 García", "value": "García", "disabled": True},
+                                            {"label": "🔒🔜 Juárez", "value": "Juárez", "disabled": True},
+                                            {"label": "🔒🔜 Allende", "value": "Allende", "disabled": True},
+                                            {"label": "🔒🔜 Apodaca", "value": "Apodaca", "disabled": True},
+                                            {"label": "🔒🔜 Cadereyta Jimenez", "value": "Cadereyta Jimenez", "disabled": True},
+                                            {"label": "🔒🔜 Cienega de Flores", "value": "Cienega de Flores", "disabled": True},
+                                            {"label": "🔒🔜 Guadalupe", "value": "Guadalupe", "disabled": True},
+                                            {"label": "🔒🔜 Monterrey", "value": "Monterrey", "disabled": True},
+                                            {"label": "🔒🔜 Salinas Victoria", "value": "Salinas Victoria", "disabled": True},
+                                            {"label": "🔒🔜 San Nicolás de los Garza", "value": "San Nicolás de los Garza", "disabled": True},
+                                            {"label": "🔒🔜 San Pedro Garza García", "value": "San Pedro Garza García", "disabled": True},
+                                            {"label": "🔒🔜 Santa Catarina", "value": "Santa Catarina", "disabled": True},
+                                            {"label": "🔒🔜 Santiago", "value": "Santiago", "disabled": True}
                                         ],
-                                        value='Todos',
+                                        value='Zona Metropolitana',
                                         clearable=False,
-                                        style={'backgroundColor': '#FFFFFF'}
+                                        style={'backgroundColor': '#FFFFFF'},
+                                        className = "pt-3"
                                     )
                                 ]),
                                 className = "pt-4 px-3"
@@ -775,17 +767,18 @@ layout = html.Div([
                             # Fecha
                             dbc.Row(
                                 dbc.Col([
-                                    html.P(
-                                        [
-                                            "🗓️ Fecha",
-                                            dbc.Tooltip(
-                                                "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
-                                                target="fecha-tooltip-target",
-                                                placement = "top",
-                                            )
-                                        ],
-                                        id="fecha-tooltip-target",
-                                        style={"font-weight": "bold"}
+                                    html.Div([
+                                        html.Img(src="assets/calendar.png", height="18px", style={'margin-right': '10px'}),
+                                        html.Span(
+                                            "Fecha", style = {"font-weight": "bold"}, id="fecha-tooltip-target"
+                                        ), 
+                                        dbc.Tooltip(
+                                            "El rango de fecha se actualiza diariamente. No se puede seleccionar un rango menor por el momento.",
+                                            target="fecha-tooltip-target",
+                                            placement = "top"
+                                        )              
+                                    ],
+                                        style={'display': 'flex', 'align-items': 'center'}
                                     ),
                                     dcc.DatePickerRange(
                                         id='date-picker-range',
@@ -796,7 +789,7 @@ layout = html.Div([
                                         min_date_allowed=datetime(2023, 5, 31),
                                         max_date_allowed=datetime(2023, 5, 8),
                                         display_format="DD/MM/YYYY",
-                                        className = "smaller-font"
+                                        className = "smaller-font pt-3"
                                     )
                                 ]),
                                 className = "pt-4 px-3"
