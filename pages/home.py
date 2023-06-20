@@ -91,11 +91,11 @@ scatter_dataframe['calidad_aire'] = scatter_dataframe['avg_pm25'].apply(calidad_
 
 # Colors with transparency
 color_map = {
-    "Buena": "rgba(0,205,0,0.8)",    # green
-    "Aceptable": "rgba(255,215,0,0.8)",    # yellow
-    "Mala": "rgba(250,135,0,0.8)",    # orange
-    "Muy Mala": "rgba(235,0,0,0.8)",    # red
-    "Extremadamente Mala": "rgba(188,23,255,0.8)",    # purple
+    "Buena": "rgba(0,205,0,0.9)",    # green
+    "Aceptable": "rgba(255,215,0,0.9)",    # yellow
+    "Mala": "rgba(250,135,0,0.9)",    # orange
+    "Muy Mala": "rgba(235,0,0,0.9)",    # red
+    "Extremadamente Mala": "rgba(188,23,255,0.9)",    # purple
 }
 
 scatter_dataframe['sensor_count'] = range(1, len(scatter_dataframe) + 1)
@@ -198,7 +198,6 @@ for calidad in merged_df['calidad_aire'].unique():
             mode='markers',
             marker=dict(
                 size=14,
-                opacity = .8,
                 color=color_map[calidad]
             ),
             hovertemplate="Sensor: %{customdata[0]}<br>Municipio: %{customdata[1]}<br>PM2.5: %{customdata[2]}",
@@ -803,70 +802,23 @@ layout = html.Div([
                     ]),
                     className = "d-flex align-items-center justify-content-center"
                 ),
-                # Descargar datos
-                dbc.Col(
-                    html.Div([
-                        html.Button(
-                            "⬇️", 
-                            id="open_descargar_m",
-                            n_clicks=0,
-                            style={
-                                "background": "none",
-                                "border": "none",
-                                "font-size": "26px",
-                                "cursor": "pointer",
-                            }
-                        ),
-                        dbc.Modal([
-                            dbc.ModalHeader(
-                                dbc.ModalTitle("Descarga los datos")
-                            ),
-                            dbc.ModalBody(
-                                html.P(
-                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados en formato CSV que puedes abrir " 
-                                    "en varias plataformas, incluyendo Excel."
-                                )
-                            ),
-                            dbc.ModalFooter([
-                                dbc.Button(
-                                    "⬇️ Descargar",
-                                    id="boton_descargar_m", 
-                                    color="secondary",
-                                    outline=True,
-                                    style={'border-color': '#CCCCCC'}
-                                ),
-                                dcc.Download(id = "datos_m")
-                            ])
-                        ],
-                        id = "modal_descargar_m",
-                        is_open = False
-                        )
-                    ]),
-                    className = "d-flex align-items-center justify-content-center"
-                ),
                 # Conoce más
                 dbc.Col(
                     html.Div([
                         html.Button(
-                            "ℹ️", 
+                            html.Img(src="assets/info.png", height="28px"), 
                             id="open_conocemas_m",
                             n_clicks=0,
                             style={
                                 "background": "none",
                                 "border": "none",
-                                "font-size": "26px",
                                 "cursor": "pointer",
                             }
                         ),
                         dbc.Modal([
                             dbc.ModalHeader(
-                                dbc.ModalTitle(
-                                    dbc.Col(
-                                        html.Img(src="../assets/logo_datacomun.png", height="30px"),
-                                        style={"color": "black"}
-                                    )
-                                )
-                            ),
+                                dbc.ModalTitle("Conoce más")
+                            ),  
                             dbc.ModalBody([
                                 html.P([
                                     "Desarrollamos esta plataforma para fortalecer a la ciudadanía en la lucha por crear una ciudad "
@@ -891,6 +843,46 @@ layout = html.Div([
                             ])
                         ],
                         id = "modal_conocemas_m",
+                        is_open = False
+                        )
+                    ]),
+                    className = "d-flex align-items-center justify-content-center"
+                ),
+                # Descargar datos
+                dbc.Col(
+                    html.Div([
+                        html.Button(
+                            html.Img(src="assets/download.png", height="28px"), 
+                            id="open_descargar_m",
+                            n_clicks=0,
+                            style={
+                                "background": "none",
+                                "border": "none",
+                                "cursor": "pointer",
+                            }
+                        ),
+                        dbc.Modal([
+                            dbc.ModalHeader(
+                                dbc.ModalTitle("Descarga los datos")
+                            ),
+                            dbc.ModalBody(
+                                html.P(
+                                    "Los datos se descargan de acuerdo a los filtros previamente seleccionados en formato CSV que puedes abrir " 
+                                    "en varias plataformas, incluyendo Excel."
+                                )
+                            ),
+                            dbc.ModalFooter([
+                                dbc.Button(
+                                    "Descargar",
+                                    id="boton_descargar_m", 
+                                    color="secondary",
+                                    outline=True,
+                                    style={'border-color': '#CCCCCC'}
+                                ),
+                                dcc.Download(id = "datos_m")
+                            ])
+                        ],
+                        id = "modal_descargar_m",
                         is_open = False
                         )
                     ]),
