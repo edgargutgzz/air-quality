@@ -25,11 +25,23 @@ conn = psycopg2.connect(DATABASE_URL)
 # Execute the query and fetch data
 query = """
 WITH numbered_rows AS (
-    SELECT a.sensor_id, a.pm25, s.nombre, s.municipio, TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI') as date, ROW_NUMBER() OVER (ORDER BY TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI')) as row_num
+    SELECT 
+        a.sensor_id, 
+        a.pm25, 
+        COALESCE(a.temp_celsius, 0) as temp_celsius, 
+        s.nombre, 
+        s.municipio, 
+        TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI') as date, 
+        ROW_NUMBER() OVER (ORDER BY TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI')) as row_num
     FROM air_quality a
     JOIN sensors s ON a.sensor_id = s.sensor_id
 )
-SELECT sensor_id, nombre, municipio, ROUND(AVG(pm25)) as avg_pm25
+SELECT 
+    sensor_id, 
+    nombre, 
+    municipio, 
+    ROUND(AVG(pm25)) as avg_pm25, 
+    ROUND(AVG(temp_celsius))::numeric(10,1) as avg_temp_celsius
 FROM numbered_rows
 WHERE row_num > 714
 GROUP BY sensor_id, nombre, municipio
@@ -46,8 +58,9 @@ conn.close()
 # Tabla
 
 columnDefs = [
-    {"headerName": "Sensor", "field": "nombre", "flex": 2},
-    {"headerName": "Municipio", "field": "municipio", "flex": 2},
+    {"headerName": "Sensor", "field": "nombre", "flex": 1},
+    {"headerName": "Municipio", "field": "municipio", "flex": 1},
+    {"headerName": "Temperatura", "field": "avg_temp_celsius", "flex": 1, 'headerTooltip': 'Temperatura promedio en grados celsius de acuerdo a las mediciones realizadas cada hora.'},
     {"headerName": "PM2.5", "field": "avg_pm25", "flex": 1, 'headerTooltip': 'Promedio global de acuerdo a las mediciones realizadas cada hora.'},
     {"headerName": "Calidad del Aire", "field": "color_label", "flex": 2}
 ]
@@ -109,15 +122,16 @@ scatter_fig = px.scatter(
     y='Municipio',
     title=None,
     hover_name='nombre',
-    custom_data=["nombre", "calidad_aire"], 
+    custom_data=["nombre", "calidad_aire", "avg_temp_celsius"], 
 )
 
 scatter_fig.update_traces(
     hovertemplate="<br>".join([
-        "Sensor: %{customdata[0]}",
-        "Municipio: %{y}",
-        "PM2.5: %{x:.0f}",
-        "Calidad del Aire: %{customdata[1]}"
+        "<b>Sensor:</b> %{customdata[0]}",
+        "<b>Municipio:</b> %{y}",
+        "<b>Temperatura:</b> %{customdata[2]}°C",
+        "<b>PM2.5:</b> %{x:.0f}",
+        "<b>Calidad del Aire:</b> %{customdata[1]}"
     ]),
     hoverinfo="none", 
     marker=dict(
@@ -181,7 +195,7 @@ scatter_fig.update_layout(
 sensors_df = pd.read_csv("assets/sensores.csv")
 
 # Merge the dataframes on 'sensor_id'
-merged_df = sensors_df.merge(scatter_dataframe[['sensor_id', 'PM2.5', 'calidad_aire']], on='sensor_id', how='left')
+merged_df = sensors_df.merge(scatter_dataframe[['sensor_id', 'PM2.5', 'calidad_aire', 'avg_temp_celsius']], on='sensor_id', how='left')
 
 # Mapbox token
 token = os.environ['DB_PWD_TER']
@@ -194,13 +208,16 @@ for calidad in merged_df['calidad_aire'].unique():
         go.Scattermapbox(
             lat=df_sub["lat"],
             lon=df_sub["lon"],
-            customdata=np.stack((df_sub["nombre"], df_sub["municipio"], df_sub["PM2.5"]), axis=-1),
-            mode='markers',
+            customdata=np.stack((df_sub["nombre"], df_sub["municipio"], df_sub["PM2.5"], df_sub["avg_temp_celsius"]), axis=-1),            mode='markers',
             marker=dict(
                 size=14,
                 color=color_map[calidad]
             ),
-            hovertemplate="Sensor: %{customdata[0]}<br>Municipio: %{customdata[1]}<br>PM2.5: %{customdata[2]}",
+            hovertemplate=
+                """<b>Sensor</b>: %{customdata[0]}
+                <br><b>Municipio:</b> %{customdata[1]}
+                <br><b>Temperatura:</b> %{customdata[3]}°C
+                <br><b>PM2.5:</b> %{customdata[2]}""",
             name=calidad
         )
     )
