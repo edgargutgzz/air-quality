@@ -797,7 +797,7 @@ layout = html.Div([
                             id = "offcanvas",
                             is_open = False,
                             placement = "start",
-                            style = {"z-index": "9999"}
+                            style = {"z-index": "9998"}
                         )
                     ]),
                     className = "d-flex align-items-center justify-content-center"
@@ -806,7 +806,7 @@ layout = html.Div([
                 dbc.Col(
                     html.Div([
                         html.Button(
-                            html.Img(src="assets/info.png", height="28px"), 
+                            html.Img(src="assets/info.png", height="30px"), 
                             id="open_conocemas_m",
                             n_clicks=0,
                             style={
@@ -852,7 +852,7 @@ layout = html.Div([
                 dbc.Col(
                     html.Div([
                         html.Button(
-                            html.Img(src="assets/download.png", height="28px"), 
+                            html.Img(src="assets/download.png", height="26px"), 
                             id="open_descargar_m",
                             n_clicks=0,
                             style={
@@ -890,7 +890,7 @@ layout = html.Div([
                 )
             ],  
                 className = "pb-2 pt-2 position-fixed w-100",
-                style = {"bottom": "0", "background-color": "rgba(255,255,255,0.9)", "z-index": "9998"}
+                style = {"bottom": "0", "background-color": "black", "z-index": "9997"}
             )
         ]),
         className = "m-0 d-xl-none"
