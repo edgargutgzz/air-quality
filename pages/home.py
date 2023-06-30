@@ -28,7 +28,8 @@ WITH numbered_rows AS (
     SELECT 
         a.sensor_id, 
         a.pm25, 
-        COALESCE(a.temp_celsius, 0) as temp_celsius, 
+        COALESCE(a.temp_celsius, 0) as temp_celsius,
+        a.humidity,
         s.nombre, 
         s.municipio, 
         TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI') as date, 
@@ -41,7 +42,8 @@ SELECT
     nombre, 
     municipio, 
     ROUND(AVG(pm25)) as avg_pm25, 
-    ROUND(AVG(temp_celsius))::numeric(10,1) as avg_temp_celsius
+    ROUND(AVG(temp_celsius))::numeric(10,1) as avg_temp_celsius,
+    ROUND(AVG(humidity))::numeric(10,1) as avg_humidity
 FROM numbered_rows
 WHERE row_num > 714
 GROUP BY sensor_id, nombre, municipio
@@ -61,6 +63,7 @@ columnDefs = [
     {"headerName": "Sensor", "field": "nombre", "flex": 1},
     {"headerName": "Municipio", "field": "municipio", "flex": 1},
     {"headerName": "Temperatura", "field": "avg_temp_celsius", "flex": 1, 'headerTooltip': 'Temperatura promedio en grados celsius de acuerdo a las mediciones realizadas cada hora.'},
+    {"headerName": "Humedad", "field": "avg_humidity", "flex": 1, 'headerTooltip': 'Humedad relativa en el interior del sensor.'},
     {"headerName": "PM2.5", "field": "avg_pm25", "flex": 1, 'headerTooltip': 'Promedio global de acuerdo a las mediciones realizadas cada hora.'},
     {"headerName": "Calidad del Aire", "field": "color_label", "flex": 2}
 ]

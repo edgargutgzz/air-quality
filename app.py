@@ -65,12 +65,12 @@ conn = psycopg2.connect(DATABASE_URL)
 # Execute the query and fetch data
 query = """
 WITH numbered_rows AS (
-    SELECT a.pollution_id, a.sensor_id, a.pm25, s.nombre, s.municipio,
+    SELECT a.pollution_id, a.sensor_id, a.pm25, a.humidity, s.nombre, s.municipio,
            (TO_TIMESTAMP(a.date, 'YYYY/MM/DD HH24:MI') - INTERVAL '6 hours') as date
     FROM air_quality a
     JOIN sensors s ON a.sensor_id = s.sensor_id
 )
-SELECT pollution_id, TO_CHAR(date, 'YYYY/MM/DD HH24:MI') as date, nombre, municipio, sensor_id, pm25
+SELECT pollution_id, TO_CHAR(date, 'YYYY/MM/DD HH24:MI') as date, nombre, municipio, sensor_id, pm25, humidity
 FROM numbered_rows
 WHERE date >= TIMESTAMP '2023-05-08 00:00:00'
 ORDER BY date;
