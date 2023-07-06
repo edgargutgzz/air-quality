@@ -291,7 +291,7 @@ layout = html.Div([
                     html.Div([
                         html.Img(src="assets/sensor.png", height="22px", style={'margin-right': '6px'}),
                         html.Span(
-                            "Fuente de Datos", style = {"font-weight": "bold"}, id="fuente-tooltip-target"
+                            "Fuente", style = {"font-weight": "bold"}, id="fuente-tooltip-target"
                         ), 
                         dbc.Tooltip(
                             "Solo una fuente de datos disponible por el momento.",
